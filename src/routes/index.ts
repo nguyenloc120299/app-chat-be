@@ -4,7 +4,7 @@ import express from "express";
 // import permission from "../helpers/permission";
 import signup from "./access/auth";
 import me from './access/user'
-
+import room from './room/create'
 const router = express.Router();
 
 /*---------------------------------------------------------*/
@@ -18,5 +18,6 @@ const router = express.Router();
 
 router.use("/auth", signup);
 router.use("/profile", me);
+router.use("/room", room);
 
 export default router;

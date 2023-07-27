@@ -12,10 +12,11 @@ export enum TypeSend {
   IMAGE = "Image"
 }
 
-export default interface Sample {
+export default interface Message {
   _id: Types.ObjectId;
   content: string;
   typeSend: TypeSend;
+  file: string;
   sender: Types.ObjectId,
   // messageRead: Array<Types.ObjectId>;
   room: Types.ObjectId;
@@ -24,11 +25,14 @@ export default interface Sample {
   updatedAt?: Date;
 }
 
-const schema = new Schema<Sample>(
+const schema = new Schema<Message>(
   {
     content: {
       type: Schema.Types.String,
       required: true,
+    },
+    file: {
+      type: Schema.Types.String,
     },
     typeSend: {
       type: Schema.Types.String,
@@ -62,7 +66,7 @@ const schema = new Schema<Sample>(
   }
 );
 
-export const SampleModel = model<Sample>(
+export const MessageModel = model<Message>(
   DOCUMENT_NAME,
   schema,
   COLLECTION_NAME
