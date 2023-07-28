@@ -4,7 +4,9 @@ import express from "express";
 // import permission from "../helpers/permission";
 import signup from "./access/auth";
 import me from './access/user'
-import room from './room/create'
+import room from './room'
+import mess from './chat'
+import userRoom from './room/user-room'
 const router = express.Router();
 
 /*---------------------------------------------------------*/
@@ -19,5 +21,6 @@ const router = express.Router();
 router.use("/auth", signup);
 router.use("/profile", me);
 router.use("/room", room);
-
+router.use("/room", userRoom);
+router.use("/message", mess);
 export default router;

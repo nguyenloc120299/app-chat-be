@@ -25,7 +25,7 @@ const io = require("socket.io")(httpServer, {
 });
 
 io.on("connection", (socket: Socket) => {
-  SocketServer(socket);
+  SocketServer(socket, io);
 });
 
 export default httpServer;

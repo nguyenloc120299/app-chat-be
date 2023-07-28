@@ -1,7 +1,7 @@
 import { Schema, model, Types } from "mongoose";
 
 export const DOCUMENT_NAME = "Message";
-export const COLLECTION_NAME = "message";
+export const COLLECTION_NAME = "messages";
 
 export enum Category {
   ABC = "ABC",
@@ -12,11 +12,11 @@ export enum TypeSend {
   IMAGE = "Image"
 }
 
-export default interface Message {
+export default interface MESSAGE {
   _id: Types.ObjectId;
   content: string;
-  typeSend: TypeSend;
-  file: string;
+  typeFile?: TypeSend;
+  file?: string;
   sender: Types.ObjectId,
   // messageRead: Array<Types.ObjectId>;
   room: Types.ObjectId;
@@ -25,7 +25,7 @@ export default interface Message {
   updatedAt?: Date;
 }
 
-const schema = new Schema<Message>(
+const schema = new Schema<MESSAGE>(
   {
     content: {
       type: Schema.Types.String,
@@ -34,17 +34,19 @@ const schema = new Schema<Message>(
     file: {
       type: Schema.Types.String,
     },
-    typeSend: {
+    typeFile: {
       type: Schema.Types.String,
-      enum: Object.values(TypeSend)
+      enum: Object.values(TypeSend),
     },
     sender: {
       type: Schema.Types.ObjectId,
-      ref: "User"
+      ref: "User",
+      required: true,
     },
     room: {
       type: Schema.Types.ObjectId,
-      ref: "Room"
+      ref: "Room",
+      required: true,
     },
     status: {
       type: Schema.Types.Boolean,
@@ -53,7 +55,7 @@ const schema = new Schema<Message>(
     createdAt: {
       type: Schema.Types.Date,
       required: true,
-      select: false,
+      select: true,
     },
     updatedAt: {
       type: Schema.Types.Date,
@@ -66,8 +68,6 @@ const schema = new Schema<Message>(
   }
 );
 
-export const MessageModel = model<Message>(
-  DOCUMENT_NAME,
-  schema,
-  COLLECTION_NAME
-);
+schema.index({ code: 1, status: 1 });
+
+export const MessageModel = model<MESSAGE>(DOCUMENT_NAME, schema, COLLECTION_NAME);

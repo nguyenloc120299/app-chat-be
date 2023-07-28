@@ -1,4 +1,5 @@
 import { Schema, model, Types } from "mongoose";
+import MESSAGE from "./Message";
 
 
 export const DOCUMENT_NAME = "Room";
@@ -8,7 +9,7 @@ export enum Category {
   ABC = "ABC",
   XYZ = "XYZ",
 }
-interface USER_READMESS {
+export  interface USER_READMESS {
   user: Types.ObjectId,
   total: number
 }
@@ -20,6 +21,7 @@ export default interface ROOM {
   members?: Array<Types.ObjectId>;
   // messages?: Array<Types.ObjectId>;
   unReadMessage?: USER_READMESS[];
+  lastMessage: MESSAGE | null;
   status?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
@@ -53,6 +55,7 @@ const schema = new Schema<ROOM>(
         },
       ],
     },
+  
     // messages: {
     //   type: [Schema.Types.ObjectId],
     //   ref: "Message",

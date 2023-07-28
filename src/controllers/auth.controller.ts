@@ -49,7 +49,7 @@ export const AuthControllers = {
         if (!user.password) throw new BadRequestError('Mật khẩu không đúng');
 
         const match = await bcrypt.compare(req.body.password, user.password);
-        if (!match) throw new AuthFailureError('Authentication failure');
+        if (!match) throw new AuthFailureError('Mật khẩu không đúng');
 
         const accessTokenKey = crypto.randomBytes(64).toString('hex');
         const refreshTokenKey = crypto.randomBytes(64).toString('hex');
