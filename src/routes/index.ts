@@ -7,6 +7,7 @@ import me from './access/user'
 import room from './room'
 import mess from './chat'
 import userRoom from './room/user-room'
+import upload from './upload'
 const router = express.Router();
 
 /*---------------------------------------------------------*/
@@ -21,6 +22,7 @@ const router = express.Router();
 router.use("/auth", signup);
 router.use("/profile", me);
 router.use("/room", room);
-router.use("/room", userRoom);
+router.use("/room-user", userRoom);
 router.use("/message", mess);
+router.use('/upload', upload)
 export default router;

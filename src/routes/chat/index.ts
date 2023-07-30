@@ -10,6 +10,7 @@ router.use(authentication);
 /*-------------------------------------------------------------------------*/
 
 router.post("/send", MessageController.send);
+
 router.get(
   "/all",
   MessageController.getAll

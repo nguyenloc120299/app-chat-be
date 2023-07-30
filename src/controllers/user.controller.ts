@@ -4,6 +4,7 @@ import UserRepo from "../database/repository/UserRepo";
 import { BadRequestError } from "../core/ApiError";
 import { SuccessResponse } from "../core/ApiResponse";
 import _ from "lodash";
+import { RoleCode } from "../database/model/Role";
 
 
 export const UserControllers = {
@@ -16,4 +17,17 @@ export const UserControllers = {
             _.pick(user, ['name', 'email', 'profilePicUrl', 'roles']),
         ).send(res);
     }),
+
+    getAllUser: asyncHandler(async (req: ProtectedRequest, res) => {
+        const page = parseInt(req.query.page as string, 10) || 1;
+        const limit = parseInt(req.query.limit as string, 10) || 10;
+        const search = req.query.search as string | '';
+        const roleName = req.query.roleName as RoleCode
+        const users = await UserRepo.findAll(page, limit, roleName, search);
+
+        return new SuccessResponse(
+            'success',
+            users,
+        ).send(res);
+    })
 }

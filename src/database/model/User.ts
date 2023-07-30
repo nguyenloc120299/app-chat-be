@@ -36,7 +36,7 @@ const schema = new Schema<User>(
       //sparse: true, // allows null
       required: true,
       trim: true,
-      select: false,
+      select: true,
     },
     password: {
       type: Schema.Types.String,
@@ -44,11 +44,11 @@ const schema = new Schema<User>(
     },
     linkFaceBook: {
       type: Schema.Types.String,
-      select: false,
+      select: true,
     },
     linkTelegram: {
       type: Schema.Types.String,
-      select: false,
+      select: true,
     },
     roles: {
       type: [
@@ -71,7 +71,7 @@ const schema = new Schema<User>(
     createdAt: {
       type: Schema.Types.Date,
       required: true,
-      select: false,
+      select: true,
     },
     updatedAt: {
       type: Schema.Types.Date,

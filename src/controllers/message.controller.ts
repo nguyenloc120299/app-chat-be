@@ -10,7 +10,7 @@ import { Types } from "mongoose";
 
 export const MessageController = {
   send: asyncHandler(async (req: ProtectedRequest, res) => {
-    const { content, room } = req.body;
+    const { content, room, role } = req.body;
 
     const roomCurrent = await RoomRepo.findById(room);
     if (!roomCurrent)
@@ -19,6 +19,7 @@ export const MessageController = {
       content,
       room,
       sender: req.user._id,
+      role
     } as MESSAGE);
 
     if (roomCurrent && roomCurrent.unReadMessage) {
@@ -38,7 +39,7 @@ export const MessageController = {
 
   getAll: asyncHandler(async (req: ProtectedRequest, res) => {
     const page = parseInt(req.query.page as string, 10) || 1;
-    const limit = parseInt(req.query.limit as string, 10) || 10;
+    const limit = parseInt(req.query.limit as string, 10) || 20;
     const roomId = req.query.roomId as string;
     const messages = await MessageRepo.findByRoom(
       new Types.ObjectId(roomId),
@@ -49,5 +50,5 @@ export const MessageController = {
     return new SuccessResponse("success", messagesReverse).send(res);
   }),
 
-  
+
 };

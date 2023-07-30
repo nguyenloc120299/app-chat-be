@@ -1,4 +1,5 @@
 import { Response } from "express";
+import User from "../database/model/User";
 
 // Helper code for the API consumer to understand the error and handle is accordingly
 enum StatusCode {
@@ -22,7 +23,7 @@ abstract class ApiResponse {
     protected statusCode: StatusCode,
     protected status: ResponseStatus,
     protected message: string
-  ) {}
+  ) { }
 
   protected prepare<T extends ApiResponse>(
     res: Response,
@@ -126,6 +127,7 @@ export class AccessTokenErrorResponse extends ApiResponse {
 export class TokenRefreshResponse extends ApiResponse {
   constructor(
     message: string,
+    private user: User,
     private accessToken: string,
     private refreshToken: string
   ) {

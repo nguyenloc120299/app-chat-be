@@ -18,4 +18,6 @@ router.get(
 
 router.get("/get-all-user", RoomController.getAll);
 
+router.post('/read-mess', RoomController.readMessage)
+
 export default router;

@@ -1,4 +1,5 @@
 import { Schema, model, Types } from "mongoose";
+import { RoleCode } from "./Role";
 
 export const DOCUMENT_NAME = "Message";
 export const COLLECTION_NAME = "messages";
@@ -23,6 +24,7 @@ export default interface MESSAGE {
   status?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
+  role?: RoleCode
 }
 
 const schema = new Schema<MESSAGE>(
@@ -37,6 +39,10 @@ const schema = new Schema<MESSAGE>(
     typeFile: {
       type: Schema.Types.String,
       enum: Object.values(TypeSend),
+    },
+    role: {
+      type: Schema.Types.String,
+      enum: Object.values(RoleCode),
     },
     sender: {
       type: Schema.Types.ObjectId,

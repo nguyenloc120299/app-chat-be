@@ -5,9 +5,10 @@ async function findById(id: Types.ObjectId): Promise<MESSAGE | null> {
   return MessageModel.findOne({ _id: id, status: true }).lean().exec();
 }
 
-async function findByRoom(room: Types.ObjectId,page:number,limit:number): Promise<MESSAGE[] | null> {
+async function findByRoom(room: Types.ObjectId, page: number, limit: number): Promise<MESSAGE[] | null> {
   const startIndex = (page - 1) * limit;
   return MessageModel.find({ room: room, status: true })
+    .populate('sender')
     .sort({ createdAt: -1 })
     .skip(startIndex)
     .limit(limit)

@@ -4,6 +4,7 @@ import schema from "./schema";
 import { AuthControllers } from "../../controllers/auth.controller";
 
 
+
 const router = express.Router();
 
 router.post(
@@ -17,6 +18,8 @@ router.post(
   validator(schema.signin),
   AuthControllers.signIn
 );
+
+
 
 
 export default router;

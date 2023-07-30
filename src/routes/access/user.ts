@@ -18,4 +18,9 @@ router.get(
     UserControllers.getMe
 );
 
+router.post('/refresh',
+    AuthControllers.refresh
+)
+
+
 export default router;

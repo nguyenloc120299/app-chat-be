@@ -1,5 +1,5 @@
 import User, { UserModel } from "../model/User";
-import { RoleModel } from "../model/Role";
+import Role, { RoleCode, RoleModel } from "../model/Role";
 import { InternalError } from "../../core/ApiError";
 import { Types } from "mongoose";
 import KeystoreRepo from "./KeystoreRepo";
@@ -23,6 +23,45 @@ async function findPrivateProfileById(
     .lean<User>()
     .exec();
 }
+
+async function findAll(page: number, pageSize: number, roleName: RoleCode | [], search: string): Promise<User[] | []> {
+  const startIndex = (page - 1) * pageSize;
+  const searchQuery = search;
+
+  // Create a regular expression to perform a case-insensitive search
+  const searchRegex = new RegExp(searchQuery, 'i');
+
+  let query: any = {};
+
+  if (roleName) {
+    const role = await RoleModel.findOne({ code: roleName }).exec();
+    query.roles = { $in: [role?._id] };
+  }
+
+  if (searchQuery) {
+    // Perform a case-insensitive search on name and phone fields
+    query.$or = [
+      { name: searchRegex },
+      { phone: searchRegex },
+    ];
+  }
+
+  // Execute the query
+  if (Object.keys(query).length > 0) {
+    return UserModel.find(query)
+      .skip(startIndex)
+      .limit(pageSize)
+      .lean()
+      .exec();
+  } else {
+    return UserModel.find({})
+      .skip(startIndex)
+      .limit(pageSize)
+      .lean()
+      .exec();
+  }
+}
+
 
 // contains critical information of the user
 async function findById(id: Types.ObjectId): Promise<User | null> {
@@ -125,4 +164,5 @@ export default {
   create,
   update,
   updateInfo,
+  findAll
 };

@@ -7,7 +7,10 @@ async function findById(id: Types.ObjectId): Promise<ROOM | null> {
 
 async function findAll(page: number, pageSize: number): Promise<ROOM[] | []> {
   const startIndex = (page - 1) * pageSize;
-  return RoomModel.find().skip(startIndex).limit(pageSize).lean().exec();
+  return RoomModel.find()
+    .populate("members")
+    .sort({ createdAt: -1, updatedAt: -1 })
+    .skip(startIndex).limit(pageSize).lean().exec();
 }
 
 async function findRoomsByUsers(
@@ -17,6 +20,7 @@ async function findRoomsByUsers(
 ): Promise<ROOM[]> {
   const startIndex = (page - 1) * pageSize;
   return RoomModel.find({ members: { $in: user } })
+    .populate('members')
     .skip(startIndex)
     .limit(pageSize)
     .lean()
