@@ -8,6 +8,9 @@ import room from './room'
 import mess from './chat'
 import userRoom from './room/user-room'
 import upload from './upload'
+import asyncHandler from "../helpers/asyncHandler";
+import { PublicRequest } from "app-request";
+import { SuccessResponse } from "../core/ApiResponse";
 const router = express.Router();
 
 /*---------------------------------------------------------*/
@@ -25,4 +28,8 @@ router.use("/room", room);
 router.use("/room-user", userRoom);
 router.use("/message", mess);
 router.use('/upload', upload)
+
+router.get('/check', asyncHandler(async (req: PublicRequest, res) => {
+    new SuccessResponse("OK", true).send(res)
+}))
 export default router;
