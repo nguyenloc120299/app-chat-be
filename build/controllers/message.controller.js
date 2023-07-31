@@ -28,6 +28,11 @@ exports.MessageController = {
                 }
                 return item;
             });
+            roomCurrent.lastMessage = {
+                content,
+                sender: req.user,
+                createdAt: new Date(),
+            };
             await RoomRepo_1.default.update(roomCurrent);
         }
         return new ApiResponse_1.SuccessResponse("success", newMessage).send(res);

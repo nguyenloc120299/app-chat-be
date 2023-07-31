@@ -31,6 +31,11 @@ export const MessageController = {
           return item;
         }
       );
+      roomCurrent.lastMessage = {
+        content,
+        sender: req.user,
+        createdAt: new Date(),
+      };
       await RoomRepo.update(roomCurrent);
     }
 

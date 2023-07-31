@@ -1,6 +1,6 @@
 import { Schema, model, Types } from "mongoose";
 import MESSAGE from "./Message";
-
+import User from "./User";
 
 export const DOCUMENT_NAME = "Room";
 export const COLLECTION_NAME = "room";
@@ -9,11 +9,15 @@ export enum Category {
   ABC = "ABC",
   XYZ = "XYZ",
 }
-export  interface USER_READMESS {
-  user: Types.ObjectId,
-  total: number
+export interface USER_READMESS {
+  user: Types.ObjectId;
+  total: number;
 }
-
+export interface LAST_MESSAGE {
+  content: string;
+  sender: User;
+  createdAt: Date;
+}
 export default interface ROOM {
   _id: Types.ObjectId;
   nameRoom: string;
@@ -21,7 +25,7 @@ export default interface ROOM {
   members?: Array<Types.ObjectId>;
   // messages?: Array<Types.ObjectId>;
   unReadMessage?: USER_READMESS[];
-  lastMessage: MESSAGE | null;
+  lastMessage?: LAST_MESSAGE;
   status?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
@@ -35,7 +39,7 @@ const schema = new Schema<ROOM>(
     },
     avatarRoom: {
       type: Schema.Types.String,
-      default: ""
+      default: "",
     },
     members: {
       type: [Schema.Types.ObjectId],
@@ -55,7 +59,7 @@ const schema = new Schema<ROOM>(
         },
       ],
     },
-  
+
     // messages: {
     //   type: [Schema.Types.ObjectId],
     //   ref: "Message",
@@ -63,6 +67,9 @@ const schema = new Schema<ROOM>(
     status: {
       type: Schema.Types.Boolean,
       default: true,
+    },
+    lastMessage: {
+      type: Object,
     },
     createdAt: {
       type: Schema.Types.Date,
@@ -80,8 +87,4 @@ const schema = new Schema<ROOM>(
   }
 );
 
-export const RoomModel = model<ROOM>(
-  DOCUMENT_NAME,
-  schema,
-  COLLECTION_NAME
-);
+export const RoomModel = model<ROOM>(DOCUMENT_NAME, schema, COLLECTION_NAME);

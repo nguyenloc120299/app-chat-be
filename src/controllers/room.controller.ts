@@ -27,34 +27,37 @@ export const RoomController = {
 
     const rooms = await RoomRepo.findAll(page, limit);
 
-    const getMessagePromises = rooms.map(async (room) => {
-      const lastMessage = await MessageRepo.findLastMessageByRoom(room._id);
-      room.lastMessage = lastMessage;
-      return room;
-    });
+    // const getMessagePromises = rooms.map(async (room) => {
+    //   const lastMessage = await MessageRepo.findLastMessageByRoom(room._id);
+    //   room.lastMessage = lastMessage;
+    //   return room;
+    // });
 
-    const roomData = await Promise.all(getMessagePromises);
+    //const roomData = await Promise.all(getMessagePromises);
 
-    new SuccessResponse("Blog created successfully", roomData).send(res);
+    new SuccessResponse("Blog created successfully", rooms).send(res);
   }),
 
   getRoomByUser: asyncHandler(async (req: ProtectedRequest, res) => {
     const userId = req.user._id;
     const page = parseInt(req.query.page as string, 10) || 1;
     const limit = parseInt(req.query.limit as string, 10) || 10;
-    const rooms = await RoomRepo.findRoomsByUsers(new Types.ObjectId(userId), page, limit);
-    const roomData = await Promise.all(
-      rooms.map(async (room) => {
-        const lastMessage = await MessageRepo.findLastMessageByRoom(room._id);
-        room.lastMessage = lastMessage;
-        return room;
-      })
+    const rooms = await RoomRepo.findRoomsByUsers(
+      new Types.ObjectId(userId),
+      page,
+      limit
     );
-    new SuccessResponse("Blog created successfully", roomData).send(res);
+    // const roomData = await Promise.all(
+    //   rooms.map(async (room) => {
+    //     const lastMessage = await MessageRepo.findLastMessageByRoom(room._id);
+    //     room.lastMessage = lastMessage;
+    //     return room;
+    //   })
+    // );
+    new SuccessResponse("Blog created successfully", rooms).send(res);
   }),
 
   readMessage: asyncHandler(async (req: ProtectedRequest, res) => {
-
     const roomCurrent = await RoomRepo.findById(req.body.room);
 
     if (roomCurrent && roomCurrent.unReadMessage) {
@@ -67,26 +70,24 @@ export const RoomController = {
         }
       );
       await RoomRepo.update(roomCurrent);
-
     }
     return new SuccessResponse("Đã xem  ", true).send(res);
   }),
   addMembers: asyncHandler(async (req: ProtectedRequest, res) => {
-    const { roomId, members } = req.body
+    const { roomId, members } = req.body;
 
-    const room = await RoomRepo.findById(roomId)
+    const room = await RoomRepo.findById(roomId);
     if (room && room.members?.length && room.unReadMessage) {
       room.members = [...room.members, ...members];
       const newUnreadMess = members.map((item: any) => {
         return {
           user: item,
-          total: 0
-        }
-      })
-      room.unReadMessage = [...room.unReadMessage, ...newUnreadMess]
-      const updatedRoom = await RoomRepo.update(room)
-
+          total: 0,
+        };
+      });
+      room.unReadMessage = [...room.unReadMessage, ...newUnreadMess];
+      const updatedRoom = await RoomRepo.update(room);
     }
     return new SuccessResponse("Đã update ", true).send(res);
-  })
+  }),
 };

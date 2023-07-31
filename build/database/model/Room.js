@@ -16,7 +16,7 @@ const schema = new mongoose_1.Schema({
     },
     avatarRoom: {
         type: mongoose_1.Schema.Types.String,
-        default: ""
+        default: "",
     },
     members: {
         type: [mongoose_1.Schema.Types.ObjectId],
@@ -43,6 +43,9 @@ const schema = new mongoose_1.Schema({
     status: {
         type: mongoose_1.Schema.Types.Boolean,
         default: true,
+    },
+    lastMessage: {
+        type: Object,
     },
     createdAt: {
         type: mongoose_1.Schema.Types.Date,

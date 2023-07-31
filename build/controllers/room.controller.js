@@ -7,7 +7,6 @@ exports.RoomController = void 0;
 const asyncHandler_1 = __importDefault(require("../helpers/asyncHandler"));
 const RoomRepo_1 = __importDefault(require("../database/repository/RoomRepo"));
 const ApiResponse_1 = require("../core/ApiResponse");
-const MessageRepo_1 = __importDefault(require("../database/repository/MessageRepo"));
 const mongoose_1 = require("mongoose");
 exports.RoomController = {
     create: (0, asyncHandler_1.default)(async (req, res) => {
@@ -29,25 +28,27 @@ exports.RoomController = {
         const page = parseInt(req.query.page, 10) || 1;
         const limit = parseInt(req.query.limit, 10) || 10;
         const rooms = await RoomRepo_1.default.findAll(page, limit);
-        const getMessagePromises = rooms.map(async (room) => {
-            const lastMessage = await MessageRepo_1.default.findLastMessageByRoom(room._id);
-            room.lastMessage = lastMessage;
-            return room;
-        });
-        const roomData = await Promise.all(getMessagePromises);
-        new ApiResponse_1.SuccessResponse("Blog created successfully", roomData).send(res);
+        // const getMessagePromises = rooms.map(async (room) => {
+        //   const lastMessage = await MessageRepo.findLastMessageByRoom(room._id);
+        //   room.lastMessage = lastMessage;
+        //   return room;
+        // });
+        //const roomData = await Promise.all(getMessagePromises);
+        new ApiResponse_1.SuccessResponse("Blog created successfully", rooms).send(res);
     }),
     getRoomByUser: (0, asyncHandler_1.default)(async (req, res) => {
         const userId = req.user._id;
         const page = parseInt(req.query.page, 10) || 1;
         const limit = parseInt(req.query.limit, 10) || 10;
         const rooms = await RoomRepo_1.default.findRoomsByUsers(new mongoose_1.Types.ObjectId(userId), page, limit);
-        const roomData = await Promise.all(rooms.map(async (room) => {
-            const lastMessage = await MessageRepo_1.default.findLastMessageByRoom(room._id);
-            room.lastMessage = lastMessage;
-            return room;
-        }));
-        new ApiResponse_1.SuccessResponse("Blog created successfully", roomData).send(res);
+        // const roomData = await Promise.all(
+        //   rooms.map(async (room) => {
+        //     const lastMessage = await MessageRepo.findLastMessageByRoom(room._id);
+        //     room.lastMessage = lastMessage;
+        //     return room;
+        //   })
+        // );
+        new ApiResponse_1.SuccessResponse("Blog created successfully", rooms).send(res);
     }),
     readMessage: (0, asyncHandler_1.default)(async (req, res) => {
         const roomCurrent = await RoomRepo_1.default.findById(req.body.room);
@@ -71,13 +72,13 @@ exports.RoomController = {
             const newUnreadMess = members.map((item) => {
                 return {
                     user: item,
-                    total: 0
+                    total: 0,
                 };
             });
             room.unReadMessage = [...room.unReadMessage, ...newUnreadMess];
             const updatedRoom = await RoomRepo_1.default.update(room);
         }
         return new ApiResponse_1.SuccessResponse("Đã update ", true).send(res);
-    })
+    }),
 };
 //# sourceMappingURL=room.controller.js.map
