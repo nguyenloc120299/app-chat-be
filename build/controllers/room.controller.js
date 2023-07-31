@@ -37,13 +37,6 @@ exports.RoomController = {
         const page = parseInt(req.query.page, 10) || 1;
         const limit = parseInt(req.query.limit, 10) || 10;
         const rooms = await RoomRepo_1.default.findRoomsByUsers(new mongoose_1.Types.ObjectId(userId), page, limit);
-        // const roomData = await Promise.all(
-        //   rooms.map(async (room) => {
-        //     const lastMessage = await MessageRepo.findLastMessageByRoom(room._id);
-        //     room.lastMessage = lastMessage;
-        //     return room;
-        //   })
-        // );
         new ApiResponse_1.SuccessResponse("Blog created successfully", rooms).send(res);
     }),
     readMessage: (0, asyncHandler_1.default)(async (req, res) => {

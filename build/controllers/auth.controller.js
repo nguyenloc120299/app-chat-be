@@ -38,18 +38,18 @@ exports.AuthControllers = {
     signIn: (0, asyncHandler_1.default)(async (req, res) => {
         const user = await UserRepo_1.default.findByPhone(req.body.phone);
         if (!user)
-            throw new ApiError_1.BadRequestError('Tài khoản chưa được đăng kí');
+            throw new ApiError_1.BadRequestError("Tài khoản chưa được đăng kí");
         if (!user.password)
-            throw new ApiError_1.BadRequestError('Mật khẩu không đúng');
+            throw new ApiError_1.BadRequestError("Mật khẩu không đúng");
         const match = await bcrypt_1.default.compare(req.body.password, user.password);
         if (!match)
-            throw new ApiError_1.AuthFailureError('Mật khẩu không đúng');
-        const accessTokenKey = crypto_1.default.randomBytes(64).toString('hex');
-        const refreshTokenKey = crypto_1.default.randomBytes(64).toString('hex');
+            throw new ApiError_1.AuthFailureError("Mật khẩu không đúng");
+        const accessTokenKey = crypto_1.default.randomBytes(64).toString("hex");
+        const refreshTokenKey = crypto_1.default.randomBytes(64).toString("hex");
         await KeystoreRepo_1.default.create(user, accessTokenKey, refreshTokenKey);
         const tokens = await (0, authUtils_1.createTokens)(user, accessTokenKey, refreshTokenKey);
         const userData = await (0, utils_1.getUserData)(user);
-        new ApiResponse_1.SuccessResponse('Login Success', {
+        new ApiResponse_1.SuccessResponse("Login Success", {
             user: userData,
             tokens: tokens,
         }).send(res);
@@ -60,21 +60,25 @@ exports.AuthControllers = {
         (0, authUtils_1.validateTokenData)(accessTokenPayload);
         const user = await UserRepo_1.default.findById(new mongoose_1.Types.ObjectId(accessTokenPayload.sub));
         if (!user)
-            throw new ApiError_1.AuthFailureError('User not registered');
+            throw new ApiError_1.AuthFailureError("User not registered");
         req.user = user;
         const refreshTokenPayload = await JWT_1.default.validate(req.body.refreshToken);
         (0, authUtils_1.validateTokenData)(refreshTokenPayload);
         if (accessTokenPayload.sub !== refreshTokenPayload.sub)
-            throw new ApiError_1.AuthFailureError('Invalid access token');
+            throw new ApiError_1.AuthFailureError("Invalid access token");
         const keystore = await KeystoreRepo_1.default.find(req.user, accessTokenPayload.prm, refreshTokenPayload.prm);
         if (!keystore)
-            throw new ApiError_1.AuthFailureError('Invalid access token');
+            throw new ApiError_1.AuthFailureError("Invalid access token");
         await KeystoreRepo_1.default.remove(keystore._id);
-        const accessTokenKey = crypto_1.default.randomBytes(64).toString('hex');
-        const refreshTokenKey = crypto_1.default.randomBytes(64).toString('hex');
+        const accessTokenKey = crypto_1.default.randomBytes(64).toString("hex");
+        const refreshTokenKey = crypto_1.default.randomBytes(64).toString("hex");
         await KeystoreRepo_1.default.create(req.user, accessTokenKey, refreshTokenKey);
         const tokens = await (0, authUtils_1.createTokens)(req.user, accessTokenKey, refreshTokenKey);
-        new ApiResponse_1.TokenRefreshResponse('Token Issued', req.user, tokens.accessToken, tokens.refreshToken).send(res);
+        new ApiResponse_1.TokenRefreshResponse("Token Issued", req.user, tokens.accessToken, tokens.refreshToken).send(res);
+    }),
+    logout: (0, asyncHandler_1.default)(async (req, res) => {
+        await KeystoreRepo_1.default.remove(req.keystore._id);
+        new ApiResponse_1.SuccessMsgResponse("Logout success").send(res);
     }),
 };
 //# sourceMappingURL=auth.controller.js.map

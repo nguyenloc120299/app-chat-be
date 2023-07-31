@@ -42,13 +42,7 @@ export const RoomController = {
       page,
       limit
     );
-    // const roomData = await Promise.all(
-    //   rooms.map(async (room) => {
-    //     const lastMessage = await MessageRepo.findLastMessageByRoom(room._id);
-    //     room.lastMessage = lastMessage;
-    //     return room;
-    //   })
-    // );
+
     new SuccessResponse("Blog created successfully", rooms).send(res);
   }),
 
