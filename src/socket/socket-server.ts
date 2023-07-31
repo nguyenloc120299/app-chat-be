@@ -13,10 +13,12 @@ export interface Leave_Room {
 }
 
 export interface MESSAGE {
-  content: string
-  sender: Sender
-  createdAt: any
-  roomId: string
+  content: string;
+  sender: Sender;
+  createdAt: any;
+  roomId: string;
+  file?: string;
+  typeFile?: string;
 }
 
 const rooms: Room = {};

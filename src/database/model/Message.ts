@@ -9,8 +9,8 @@ export enum Category {
   XYZ = "XYZ",
 }
 export enum TypeSend {
-  TEXT = "Text",
-  IMAGE = "Image"
+  TEXT = "VIDEO",
+  IMAGE = "IMAGE"
 }
 
 export default interface MESSAGE {

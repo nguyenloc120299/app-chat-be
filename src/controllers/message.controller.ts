@@ -10,7 +10,7 @@ import { Types } from "mongoose";
 
 export const MessageController = {
   send: asyncHandler(async (req: ProtectedRequest, res) => {
-    const { content, room, role } = req.body;
+    const { content, room, role, file, typeFile } = req.body;
 
     const roomCurrent = await RoomRepo.findById(room);
     if (!roomCurrent)
@@ -19,7 +19,9 @@ export const MessageController = {
       content,
       room,
       sender: req.user._id,
-      role
+      role,
+      file,
+      typeFile,
     } as MESSAGE);
 
     if (roomCurrent && roomCurrent.unReadMessage) {
@@ -54,6 +56,4 @@ export const MessageController = {
     const messagesReverse = messages?.reverse();
     return new SuccessResponse("success", messagesReverse).send(res);
   }),
-
-
 };

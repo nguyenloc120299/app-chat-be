@@ -3,9 +3,9 @@ import { Request, Response } from 'express';
 import fs from 'fs'
 
 cloudinary.v2.config({
-    cloud_name: 'dnc07cnyn',
-    api_key: '337548121389118',
-    api_secret: 'Nq6k1xQxgpOZK42k6aIy6_zgEt0',
+  cloud_name: "dqqzhk0pd",
+  api_key: "169568384122127",
+  api_secret: "jS_bj0t2gG6fJ-ICiL2CV0VdpUM",
 });
 
 export const UploadController = {
@@ -17,12 +17,12 @@ export const UploadController = {
 
             const result = await new Promise<any>((resolve, reject) => {
                 cloudinary.v2.uploader.upload(
-                    path,
-                    { upload_preset: 'ml_default' },
-                    (error, result) => {
-                        if (error) reject(error);
-                        else resolve(result);
-                    }
+                  path,
+                  { upload_preset: "kyu77xbt", resource_type: "auto" },
+                  (error, result) => {
+                    if (error) reject(error);
+                    else resolve(result);
+                  }
                 );
             });
             fs.unlinkSync(path);
