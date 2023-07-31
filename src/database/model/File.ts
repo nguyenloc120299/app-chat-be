@@ -10,8 +10,8 @@ export enum Category {
 
 export default interface File {
   _id: Types.ObjectId;
-  public_id?: string;
-  url?: string;
+  public_id: string;
+  url: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -23,8 +23,8 @@ const schema = new Schema<File>(
       required: true,
     },
     url: {
-      type: Schema.Types.Boolean,
-      default: true,
+      type: Schema.Types.String,
+      required: true,
     },
     createdAt: {
       type: Schema.Types.Date,

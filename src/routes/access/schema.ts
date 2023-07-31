@@ -19,6 +19,8 @@ export default {
     phone: Joi.string().required(),
     password: Joi.string().required().min(6),
     roleCode: Joi.string().required(),
+    linkFaceBook: Joi.string().required(),
+    linkTelegram: Joi.string().required()
   }),
 
   signin: Joi.object().keys({

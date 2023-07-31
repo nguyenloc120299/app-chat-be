@@ -31,7 +31,6 @@ const schema = new Schema<MESSAGE>(
   {
     content: {
       type: Schema.Types.String,
-      required: true,
     },
     file: {
       type: Schema.Types.String,

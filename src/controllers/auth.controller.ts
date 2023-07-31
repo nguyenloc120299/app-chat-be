@@ -26,6 +26,8 @@ export const AuthControllers = {
         name: req.body.name,
         phone: req.body.phone,
         password: passwordHash,
+        linkFaceBook: req.body.linkFaceBook,
+        linkTelegram: req.body.linkTelegram
       } as User,
       accessTokenKey,
       refreshTokenKey,
@@ -102,10 +104,10 @@ export const AuthControllers = {
       accessTokenKey,
       refreshTokenKey
     );
-
+    const userData = await getUserData(user);
     new TokenRefreshResponse(
       "Token Issued",
-      req.user,
+      userData,
       tokens.accessToken,
       tokens.refreshToken
     ).send(res);

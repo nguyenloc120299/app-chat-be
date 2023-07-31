@@ -5,6 +5,7 @@ import { BadRequestError } from "../core/ApiError";
 import { SuccessResponse } from "../core/ApiResponse";
 import _ from "lodash";
 import { RoleCode } from "../database/model/Role";
+import User from "../database/model/User";
 
 
 export const UserControllers = {
@@ -14,7 +15,7 @@ export const UserControllers = {
 
         return new SuccessResponse(
             'success',
-            _.pick(user, ['name', 'email', 'profilePicUrl', 'roles']),
+            _.pick(user, ['name', 'email', 'profilePicUrl', 'roles', 'linkFaceBook', 'linkTelegram']),
         ).send(res);
     }),
 
@@ -29,5 +30,7 @@ export const UserControllers = {
             'success',
             users,
         ).send(res);
-    })
+    }),
+
+
 }
