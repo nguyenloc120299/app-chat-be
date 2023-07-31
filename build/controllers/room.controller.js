@@ -8,6 +8,7 @@ const asyncHandler_1 = __importDefault(require("../helpers/asyncHandler"));
 const RoomRepo_1 = __importDefault(require("../database/repository/RoomRepo"));
 const ApiResponse_1 = require("../core/ApiResponse");
 const mongoose_1 = require("mongoose");
+const rooms = [];
 exports.RoomController = {
     create: (0, asyncHandler_1.default)(async (req, res) => {
         const { nameRoom, avatarRoom, members } = req.body;
@@ -22,18 +23,13 @@ exports.RoomController = {
                 };
             }),
         });
+        rooms.push(newRoom);
         new ApiResponse_1.SuccessResponse("Blog created successfully", newRoom).send(res);
     }),
     getAll: (0, asyncHandler_1.default)(async (req, res) => {
         const page = parseInt(req.query.page, 10) || 1;
         const limit = parseInt(req.query.limit, 10) || 10;
         const rooms = await RoomRepo_1.default.findAll(page, limit);
-        // const getMessagePromises = rooms.map(async (room) => {
-        //   const lastMessage = await MessageRepo.findLastMessageByRoom(room._id);
-        //   room.lastMessage = lastMessage;
-        //   return room;
-        // });
-        //const roomData = await Promise.all(getMessagePromises);
         new ApiResponse_1.SuccessResponse("Blog created successfully", rooms).send(res);
     }),
     getRoomByUser: (0, asyncHandler_1.default)(async (req, res) => {

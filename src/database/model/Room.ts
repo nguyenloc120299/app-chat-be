@@ -86,5 +86,6 @@ const schema = new Schema<ROOM>(
     versionKey: false,
   }
 );
+schema.index({ _id: 1, status: 1 });
 
 export const RoomModel = model<ROOM>(DOCUMENT_NAME, schema, COLLECTION_NAME);

@@ -5,6 +5,9 @@ import ROOM, { USER_READMESS } from "../database/model/Room";
 import { SuccessResponse } from "../core/ApiResponse";
 import MessageRepo from "../database/repository/MessageRepo";
 import { Types } from "mongoose";
+
+const rooms: ROOM[]=[]
+
 export const RoomController = {
   create: asyncHandler(async (req: ProtectedRequest, res) => {
     const { nameRoom, avatarRoom, members } = req.body;
@@ -19,6 +22,7 @@ export const RoomController = {
         };
       }),
     } as ROOM);
+    rooms.push(newRoom)
     new SuccessResponse("Blog created successfully", newRoom).send(res);
   }),
   getAll: asyncHandler(async (req: ProtectedRequest, res) => {
@@ -26,15 +30,6 @@ export const RoomController = {
     const limit = parseInt(req.query.limit as string, 10) || 10;
 
     const rooms = await RoomRepo.findAll(page, limit);
-
-    // const getMessagePromises = rooms.map(async (room) => {
-    //   const lastMessage = await MessageRepo.findLastMessageByRoom(room._id);
-    //   room.lastMessage = lastMessage;
-    //   return room;
-    // });
-
-    //const roomData = await Promise.all(getMessagePromises);
-
     new SuccessResponse("Blog created successfully", rooms).send(res);
   }),
 

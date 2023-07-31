@@ -60,5 +60,6 @@ const schema = new mongoose_1.Schema({
 }, {
     versionKey: false,
 });
+schema.index({ _id: 1, status: 1 });
 exports.RoomModel = (0, mongoose_1.model)(exports.DOCUMENT_NAME, schema, exports.COLLECTION_NAME);
 //# sourceMappingURL=Room.js.map
