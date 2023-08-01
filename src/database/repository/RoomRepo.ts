@@ -2,7 +2,9 @@ import { Types } from "mongoose";
 import ROOM, { RoomModel } from "../model/Room";
 
 async function findById(id: Types.ObjectId): Promise<ROOM | null> {
-  return RoomModel.findOne({ _id: id, status: true }).lean().exec();
+  return RoomModel.findOne({ _id: id, status: true })
+    .populate('members')
+    .lean().exec();
 }
 
 async function findAll(page: number, pageSize: number): Promise<ROOM[] | []> {

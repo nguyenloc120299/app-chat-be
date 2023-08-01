@@ -2,11 +2,11 @@ import { ProtectedRequest } from "app-request";
 import asyncHandler from "../helpers/asyncHandler";
 import RoomRepo from "../database/repository/RoomRepo";
 import ROOM, { USER_READMESS } from "../database/model/Room";
-import { SuccessResponse } from "../core/ApiResponse";
+import { BadRequestResponse, SuccessResponse } from "../core/ApiResponse";
 import MessageRepo from "../database/repository/MessageRepo";
 import { Types } from "mongoose";
 
-const rooms: ROOM[]=[]
+const rooms: ROOM[] = []
 
 export const RoomController = {
   create: asyncHandler(async (req: ProtectedRequest, res) => {
@@ -79,4 +79,13 @@ export const RoomController = {
     }
     return new SuccessResponse("Đã update ", true).send(res);
   }),
+  updateRoom: asyncHandler(async (req: ProtectedRequest, res) => {
+    const { roomId, avatarRoom, nameRoom } = req.body;
+    const roomCurrent = await RoomRepo.findById(roomId)
+    if (!roomCurrent) return new BadRequestResponse("Phòng không tìm thấy").send(res)
+    roomCurrent.avatarRoom = avatarRoom || roomCurrent.avatarRoom
+    roomCurrent.nameRoom = nameRoom || roomCurrent.nameRoom
+    await RoomRepo.update(roomCurrent)
+    return new SuccessResponse("Đã update date", roomCurrent).send(res)
+  })
 };

@@ -56,4 +56,12 @@ export const MessageController = {
     const messagesReverse = messages?.reverse();
     return new SuccessResponse("success", messagesReverse).send(res);
   }),
+
+  updateMessage: asyncHandler(async (req: ProtectedRequest, res) => {
+    const { messageId, pin } = req.body
+    const messageCurrent = await MessageRepo.findById(messageId)
+    if (!messageCurrent) return new BadRequestResponse("Tin nhắn không tìm thấy").send(res)
+    messageCurrent.pin = pin || false
+    return new SuccessResponse("success", messageCurrent).send(res);
+  }),
 };

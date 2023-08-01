@@ -15,4 +15,7 @@ router.get(
   "/all",
   MessageController.getAll
 );
+
+router.post("/update", MessageController.updateMessage)
+
 export default router;
