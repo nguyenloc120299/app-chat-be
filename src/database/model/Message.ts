@@ -19,6 +19,7 @@ export default interface MESSAGE {
   typeFile?: TypeSend;
   file?: string;
   sender: Types.ObjectId,
+  pin?: boolean;
   // messageRead: Array<Types.ObjectId>;
   room: Types.ObjectId;
   status?: boolean;
@@ -31,10 +32,13 @@ const schema = new Schema<MESSAGE>(
   {
     content: {
       type: Schema.Types.String,
-      required: true,
     },
     file: {
       type: Schema.Types.String,
+    },
+    pin: {
+      type: Schema.Types.Boolean,
+      default: false
     },
     typeFile: {
       type: Schema.Types.String,

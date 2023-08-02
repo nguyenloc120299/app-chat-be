@@ -23,4 +23,6 @@ router.get('/users',
 )
 
 router.post('/add-members', RoomController.addMembers)
+
+router.post('/update-room', RoomController.updateRoom)
 export default router; 
