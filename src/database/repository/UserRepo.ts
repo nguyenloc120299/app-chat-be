@@ -24,7 +24,7 @@ async function findPrivateProfileById(
     .exec();
 }
 
-async function findAll(page: number, pageSize: number, roleName: RoleCode | [], search: string,userId:Types.ObjectId): Promise<User[] | []> {
+async function findAll(page: number, pageSize: number, roleName: RoleCode | [], search: string, userId: Types.ObjectId): Promise<User[] | []> {
   const startIndex = (page - 1) * pageSize;
   const searchQuery = search;
 
@@ -45,7 +45,7 @@ async function findAll(page: number, pageSize: number, roleName: RoleCode | [], 
       { phone: searchRegex },
     ];
   }
-    query._id = { $ne: userId };
+  query._id = { $ne: userId };
   // Execute the query
   if (Object.keys(query).length > 0) {
     return UserModel.find(query)
@@ -154,6 +154,9 @@ async function updateInfo(user: User): Promise<any> {
     .exec();
 }
 
+async function findOneByToken(token: string): Promise<User | null> {
+  return await UserModel.findOne({ tokenFireBase: token })
+}
 export default {
   exists,
   findPrivateProfileById,
@@ -164,5 +167,6 @@ export default {
   create,
   update,
   updateInfo,
-  findAll
+  findAll,
+  findOneByToken
 };

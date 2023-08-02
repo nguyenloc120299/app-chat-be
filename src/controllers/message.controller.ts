@@ -8,6 +8,7 @@ import RoomRepo from "../database/repository/RoomRepo";
 import { USER_READMESS } from "../database/model/Room";
 import { Types } from "mongoose";
 import admin from "firebase-admin";
+import UserRepo from "../database/repository/UserRepo";
 export const MessageController = {
   send: asyncHandler(async (req: ProtectedRequest, res) => {
     const { content, room, role, file, typeFile } = req.body;
@@ -67,13 +68,16 @@ export const MessageController = {
   }),
 
   pushNotification: asyncHandler(async (req: ProtectedRequest, res) => {
-    const { titleNotification, bodyNotification, tokenFireBase } = req.body;
+    const { titleNotification, bodyNotification, userId, room, role } = req.body;
+    const user = await UserRepo.findById(userId)
+    if (!user) return new BadRequestResponse("User not found").send(res)
+    if (!user.tokenFireBase) return new BadRequestResponse("Token not found").send(res)
     const message = {
       notification: {
         title: titleNotification,
         body: bodyNotification,
       },
-      token: tokenFireBase,
+      token: user.tokenFireBase,
       data: {
         path: "/",
       },
@@ -84,9 +88,34 @@ export const MessageController = {
         },
       },
     };
-    
-    const response = await admin.messaging().send(message as any);
 
-    return new SuccessResponse("success", response).send(res);
+    const response = await admin.messaging().send(message as any);
+    const roomCurrent = await RoomRepo.findById(room);
+    if (!roomCurrent)
+      return new BadRequestResponse("Nhóm chat không còn tồn tại").send(res);
+    const newMessage = await MessageRepo.create({
+      content: "@" + user?.name,
+      room,
+      sender: req.user._id,
+      role,
+    } as MESSAGE);
+
+    if (roomCurrent && roomCurrent.unReadMessage) {
+      roomCurrent.unReadMessage = roomCurrent.unReadMessage.map(
+        (item: USER_READMESS) => {
+          if (item.user.toString() != req.user._id.toString()) {
+            return { ...item, total: item.total + 1 };
+          }
+          return item;
+        }
+      );
+      roomCurrent.lastMessage = {
+        content: "@" + user?.name,
+        sender: req.user,
+        createdAt: new Date(),
+      };
+      await RoomRepo.update(roomCurrent);
+    }
+    return new SuccessResponse("success", newMessage).send(res);
   }),
 };

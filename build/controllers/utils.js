@@ -14,6 +14,7 @@ async function getUserData(user) {
         "linkFaceBook",
         "linkTelegram",
         "tokenFireBase",
+        "profilePicUrl"
     ]);
     return data;
 }

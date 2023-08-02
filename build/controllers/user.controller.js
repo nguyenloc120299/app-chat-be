@@ -33,15 +33,21 @@ exports.UserControllers = {
     }),
     updateMe: (0, asyncHandler_1.default)(async (req, res) => {
         const { name, profilePicUrl, linkFaceBook, linkTelegram, tokenFireBase } = req.body;
-        console.log(name, profilePicUrl, linkFaceBook, linkTelegram);
         const user = await UserRepo_1.default.findPrivateProfileById(req.user._id);
         if (!user)
             throw new ApiError_1.BadRequestError("User not registered");
         user.name = name;
-        user.profilePicUrl = profilePicUrl || user.profilePicUrl;
+        user.profilePicUrl = profilePicUrl || user.profilePicUrl || "";
         user.linkFaceBook = linkFaceBook || "";
         user.linkTelegram = linkTelegram || "";
-        user.tokenFireBase = tokenFireBase || user.tokenFireBase;
+        if (tokenFireBase) {
+            const userByToken = await UserRepo_1.default.findOneByToken(tokenFireBase);
+            if (userByToken && (userByToken === null || userByToken === void 0 ? void 0 : userByToken.phone) != user.phone) {
+                userByToken.tokenFireBase = '';
+                await UserRepo_1.default.updateInfo(userByToken);
+            }
+            user.tokenFireBase = tokenFireBase || user.tokenFireBase;
+        }
         await UserRepo_1.default.updateInfo(user);
         return new ApiResponse_1.SuccessResponse("Profile updated", user).send(res);
     }),

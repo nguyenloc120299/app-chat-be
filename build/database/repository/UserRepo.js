@@ -117,6 +117,9 @@ async function updateInfo(user) {
         .lean()
         .exec();
 }
+async function findOneByToken(token) {
+    return await User_1.UserModel.findOne({ tokenFireBase: token });
+}
 exports.default = {
     exists,
     findPrivateProfileById,
@@ -127,6 +130,7 @@ exports.default = {
     create,
     update,
     updateInfo,
-    findAll
+    findAll,
+    findOneByToken
 };
 //# sourceMappingURL=UserRepo.js.map

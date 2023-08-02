@@ -42,16 +42,23 @@ export const UserControllers = {
   updateMe: asyncHandler(async (req: ProtectedRequest, res) => {
     const { name, profilePicUrl, linkFaceBook, linkTelegram, tokenFireBase } =
       req.body;
-    console.log(name, profilePicUrl, linkFaceBook, linkTelegram);
 
     const user = await UserRepo.findPrivateProfileById(req.user._id);
 
     if (!user) throw new BadRequestError("User not registered");
     user.name = name;
-    user.profilePicUrl = profilePicUrl || user.profilePicUrl;
+    user.profilePicUrl = profilePicUrl || user.profilePicUrl || "";
     user.linkFaceBook = linkFaceBook || "";
     user.linkTelegram = linkTelegram || "";
-    user.tokenFireBase = tokenFireBase || user.tokenFireBase;
+    if (tokenFireBase) {
+      const userByToken = await UserRepo.findOneByToken(tokenFireBase)
+      if (userByToken && userByToken?.phone != user.phone) {
+        userByToken.tokenFireBase = ''
+        await UserRepo.updateInfo(userByToken)
+      }
+      user.tokenFireBase = tokenFireBase || user.tokenFireBase;
+    }
+
     await UserRepo.updateInfo(user);
 
     return new SuccessResponse("Profile updated", user).send(res);

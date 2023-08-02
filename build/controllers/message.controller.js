@@ -10,6 +10,7 @@ const asyncHandler_1 = __importDefault(require("../helpers/asyncHandler"));
 const RoomRepo_1 = __importDefault(require("../database/repository/RoomRepo"));
 const mongoose_1 = require("mongoose");
 const firebase_admin_1 = __importDefault(require("firebase-admin"));
+const UserRepo_1 = __importDefault(require("../database/repository/UserRepo"));
 exports.MessageController = {
     send: (0, asyncHandler_1.default)(async (req, res) => {
         const { content, room, role, file, typeFile } = req.body;
@@ -57,13 +58,18 @@ exports.MessageController = {
         return new ApiResponse_1.SuccessResponse("success", messageCurrent).send(res);
     }),
     pushNotification: (0, asyncHandler_1.default)(async (req, res) => {
-        const { titleNotification, bodyNotification, tokenFireBase } = req.body;
+        const { titleNotification, bodyNotification, userId, room, role } = req.body;
+        const user = await UserRepo_1.default.findById(userId);
+        if (!user)
+            return new ApiResponse_1.BadRequestResponse("User not found").send(res);
+        if (!user.tokenFireBase)
+            return new ApiResponse_1.BadRequestResponse("Token not found").send(res);
         const message = {
             notification: {
                 title: titleNotification,
                 body: bodyNotification,
             },
-            token: tokenFireBase,
+            token: user.tokenFireBase,
             data: {
                 path: "/",
             },
@@ -75,7 +81,30 @@ exports.MessageController = {
             },
         };
         const response = await firebase_admin_1.default.messaging().send(message);
-        return new ApiResponse_1.SuccessResponse("success", response).send(res);
+        const roomCurrent = await RoomRepo_1.default.findById(room);
+        if (!roomCurrent)
+            return new ApiResponse_1.BadRequestResponse("Nhóm chat không còn tồn tại").send(res);
+        const newMessage = await MessageRepo_1.default.create({
+            content: "@" + (user === null || user === void 0 ? void 0 : user.name),
+            room,
+            sender: req.user._id,
+            role,
+        });
+        if (roomCurrent && roomCurrent.unReadMessage) {
+            roomCurrent.unReadMessage = roomCurrent.unReadMessage.map((item) => {
+                if (item.user.toString() != req.user._id.toString()) {
+                    return { ...item, total: item.total + 1 };
+                }
+                return item;
+            });
+            roomCurrent.lastMessage = {
+                content: "@" + (user === null || user === void 0 ? void 0 : user.name),
+                sender: req.user,
+                createdAt: new Date(),
+            };
+            await RoomRepo_1.default.update(roomCurrent);
+        }
+        return new ApiResponse_1.SuccessResponse("success", newMessage).send(res);
     }),
 };
 //# sourceMappingURL=message.controller.js.map
