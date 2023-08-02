@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getUserData = void 0;
 const lodash_1 = __importDefault(require("lodash"));
 async function getUserData(user) {
-    const data = lodash_1.default.pick(user, ["_id", "name", "roles", "phone"]);
+    const data = lodash_1.default.pick(user, ["_id", "name", "roles", "phone", "linkFaceBook", "linkTelegram"]);
     return data;
 }
 exports.getUserData = getUserData;

@@ -14,6 +14,9 @@ const schema = new mongoose_1.Schema({
         type: mongoose_1.Schema.Types.String,
         trim: true,
     },
+    tokenFireBase: {
+        type: mongoose_1.Schema.Types.String,
+    },
     phone: {
         type: mongoose_1.Schema.Types.String,
         unique: true,

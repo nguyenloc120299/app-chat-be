@@ -22,7 +22,7 @@ async function findPrivateProfileById(id) {
         .lean()
         .exec();
 }
-async function findAll(page, pageSize, roleName, search) {
+async function findAll(page, pageSize, roleName, search, userId) {
     const startIndex = (page - 1) * pageSize;
     const searchQuery = search;
     // Create a regular expression to perform a case-insensitive search
@@ -39,6 +39,7 @@ async function findAll(page, pageSize, roleName, search) {
             { phone: searchRegex },
         ];
     }
+    query._id = { $ne: userId };
     // Execute the query
     if (Object.keys(query).length > 0) {
         return User_1.UserModel.find(query)

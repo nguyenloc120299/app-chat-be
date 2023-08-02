@@ -18,5 +18,6 @@ router.post("/create", room_controller_1.RoomController.create);
 router.get("/get-all", room_controller_1.RoomController.getAll);
 router.get('/users', user_controller_1.UserControllers.getAllUser);
 router.post('/add-members', room_controller_1.RoomController.addMembers);
+router.post('/update-room', room_controller_1.RoomController.updateRoom);
 exports.default = router;
 //# sourceMappingURL=index.js.map

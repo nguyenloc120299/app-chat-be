@@ -11,7 +11,7 @@ const RoomRepo_1 = __importDefault(require("../database/repository/RoomRepo"));
 const mongoose_1 = require("mongoose");
 exports.MessageController = {
     send: (0, asyncHandler_1.default)(async (req, res) => {
-        const { content, room, role } = req.body;
+        const { content, room, role, file, typeFile } = req.body;
         const roomCurrent = await RoomRepo_1.default.findById(room);
         if (!roomCurrent)
             return new ApiResponse_1.BadRequestResponse("Nhóm chat không còn tồn tại").send(res);
@@ -19,7 +19,9 @@ exports.MessageController = {
             content,
             room,
             sender: req.user._id,
-            role
+            role,
+            file,
+            typeFile,
         });
         if (roomCurrent && roomCurrent.unReadMessage) {
             roomCurrent.unReadMessage = roomCurrent.unReadMessage.map((item) => {
@@ -44,6 +46,14 @@ exports.MessageController = {
         const messages = await MessageRepo_1.default.findByRoom(new mongoose_1.Types.ObjectId(roomId), page, limit);
         const messagesReverse = messages === null || messages === void 0 ? void 0 : messages.reverse();
         return new ApiResponse_1.SuccessResponse("success", messagesReverse).send(res);
+    }),
+    updateMessage: (0, asyncHandler_1.default)(async (req, res) => {
+        const { messageId, pin } = req.body;
+        const messageCurrent = await MessageRepo_1.default.findById(messageId);
+        if (!messageCurrent)
+            return new ApiResponse_1.BadRequestResponse("Tin nhắn không tìm thấy").send(res);
+        messageCurrent.pin = pin || false;
+        return new ApiResponse_1.SuccessResponse("success", messageCurrent).send(res);
     }),
 };
 //# sourceMappingURL=message.controller.js.map

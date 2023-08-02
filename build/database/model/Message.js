@@ -12,16 +12,19 @@ var Category;
 })(Category || (exports.Category = Category = {}));
 var TypeSend;
 (function (TypeSend) {
-    TypeSend["TEXT"] = "Text";
-    TypeSend["IMAGE"] = "Image";
+    TypeSend["TEXT"] = "VIDEO";
+    TypeSend["IMAGE"] = "IMAGE";
 })(TypeSend || (exports.TypeSend = TypeSend = {}));
 const schema = new mongoose_1.Schema({
     content: {
         type: mongoose_1.Schema.Types.String,
-        required: true,
     },
     file: {
         type: mongoose_1.Schema.Types.String,
+    },
+    pin: {
+        type: mongoose_1.Schema.Types.Boolean,
+        default: false
     },
     typeFile: {
         type: mongoose_1.Schema.Types.String,

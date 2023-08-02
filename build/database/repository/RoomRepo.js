@@ -2,7 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const Room_1 = require("../model/Room");
 async function findById(id) {
-    return Room_1.RoomModel.findOne({ _id: id, status: true }).lean().exec();
+    return Room_1.RoomModel.findOne({ _id: id, status: true })
+        .populate('members')
+        .lean().exec();
 }
 async function findAll(page, pageSize) {
     const startIndex = (page - 1) * pageSize;

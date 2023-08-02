@@ -27,6 +27,8 @@ exports.AuthControllers = {
             name: req.body.name,
             phone: req.body.phone,
             password: passwordHash,
+            linkFaceBook: req.body.linkFaceBook,
+            linkTelegram: req.body.linkTelegram
         }, accessTokenKey, refreshTokenKey, req.body.roleCode);
         const tokens = await (0, authUtils_1.createTokens)(createdUser, keystore.primaryKey, keystore.secondaryKey);
         const userData = await (0, utils_1.getUserData)(createdUser);
@@ -74,7 +76,8 @@ exports.AuthControllers = {
         const refreshTokenKey = crypto_1.default.randomBytes(64).toString("hex");
         await KeystoreRepo_1.default.create(req.user, accessTokenKey, refreshTokenKey);
         const tokens = await (0, authUtils_1.createTokens)(req.user, accessTokenKey, refreshTokenKey);
-        new ApiResponse_1.TokenRefreshResponse("Token Issued", req.user, tokens.accessToken, tokens.refreshToken).send(res);
+        const userData = await (0, utils_1.getUserData)(user);
+        new ApiResponse_1.TokenRefreshResponse("Token Issued", userData, tokens.accessToken, tokens.refreshToken).send(res);
     }),
     logout: (0, asyncHandler_1.default)(async (req, res) => {
         await KeystoreRepo_1.default.remove(req.keystore._id);

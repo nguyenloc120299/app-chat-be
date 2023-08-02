@@ -69,5 +69,15 @@ exports.RoomController = {
         }
         return new ApiResponse_1.SuccessResponse("Đã update ", true).send(res);
     }),
+    updateRoom: (0, asyncHandler_1.default)(async (req, res) => {
+        const { roomId, avatarRoom, nameRoom } = req.body;
+        const roomCurrent = await RoomRepo_1.default.findById(roomId);
+        if (!roomCurrent)
+            return new ApiResponse_1.BadRequestResponse("Phòng không tìm thấy").send(res);
+        roomCurrent.avatarRoom = avatarRoom || roomCurrent.avatarRoom;
+        roomCurrent.nameRoom = nameRoom || roomCurrent.nameRoom;
+        await RoomRepo_1.default.update(roomCurrent);
+        return new ApiResponse_1.SuccessResponse("Đã update date", roomCurrent).send(res);
+    })
 };
 //# sourceMappingURL=room.controller.js.map

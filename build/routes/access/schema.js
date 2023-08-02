@@ -23,6 +23,8 @@ exports.default = {
         phone: joi_1.default.string().required(),
         password: joi_1.default.string().required().min(6),
         roleCode: joi_1.default.string().required(),
+        linkFaceBook: joi_1.default.string().required(),
+        linkTelegram: joi_1.default.string().required()
     }),
     signin: joi_1.default.object().keys({
         phone: joi_1.default.string().required(),
