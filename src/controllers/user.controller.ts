@@ -7,17 +7,22 @@ import _ from "lodash";
 import { RoleCode } from "../database/model/Role";
 import User from "../database/model/User";
 
-
 export const UserControllers = {
   getMe: asyncHandler(async (req: ProtectedRequest, res) => {
     const user = await UserRepo.findPrivateProfileById(req.user._id);
     if (!user) throw new BadRequestError("User not registered");
-
-        return new SuccessResponse(
-            'success',
-            _.pick(user, ['name', 'email', 'profilePicUrl', 'roles', 'linkFaceBook', 'linkTelegram']),
-        ).send(res);
-    }),
+    return new SuccessResponse(
+      "success",
+      _.pick(user, [
+        "name",
+        "email",
+        "profilePicUrl",
+        "roles",
+        "linkFaceBook",
+        "linkTelegram",
+      ])
+    ).send(res);
+  }),
 
   getAllUser: asyncHandler(async (req: ProtectedRequest, res) => {
     const page = parseInt(req.query.page as string, 10) || 1;
@@ -32,10 +37,11 @@ export const UserControllers = {
       req.user._id
     );
 
-    return new SuccessResponse("success", users).send(res) ;
+    return new SuccessResponse("success", users).send(res);
   }),
   updateMe: asyncHandler(async (req: ProtectedRequest, res) => {
-    const { name, profilePicUrl, linkFaceBook, linkTelegram } = req.body;
+    const { name, profilePicUrl, linkFaceBook, linkTelegram, tokenFireBase } =
+      req.body;
     console.log(name, profilePicUrl, linkFaceBook, linkTelegram);
 
     const user = await UserRepo.findPrivateProfileById(req.user._id);
@@ -45,6 +51,7 @@ export const UserControllers = {
     user.profilePicUrl = profilePicUrl || user.profilePicUrl;
     user.linkFaceBook = linkFaceBook || "";
     user.linkTelegram = linkTelegram || "";
+    user.tokenFireBase = tokenFireBase || "";
     await UserRepo.updateInfo(user);
 
     return new SuccessResponse("Profile updated", user).send(res);

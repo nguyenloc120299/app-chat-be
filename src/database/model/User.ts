@@ -11,6 +11,7 @@ export default interface User {
   phone?: string;
   password?: string;
   roles: Role[];
+  tokenFireBase?:string;
   verified?: boolean;
   status?: boolean;
   createdAt?: Date;
@@ -26,9 +27,13 @@ const schema = new Schema<User>(
       trim: true,
       maxlength: 200,
     },
+
     profilePicUrl: {
       type: Schema.Types.String,
       trim: true,
+    },
+    tokenFireBase: {
+      type: Schema.Types.String,
     },
     phone: {
       type: Schema.Types.String,
