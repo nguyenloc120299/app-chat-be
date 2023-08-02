@@ -51,7 +51,7 @@ export const UserControllers = {
     user.profilePicUrl = profilePicUrl || user.profilePicUrl;
     user.linkFaceBook = linkFaceBook || "";
     user.linkTelegram = linkTelegram || "";
-    user.tokenFireBase = tokenFireBase || "";
+    user.tokenFireBase = tokenFireBase || user.tokenFireBase;
     await UserRepo.updateInfo(user);
 
     return new SuccessResponse("Profile updated", user).send(res);

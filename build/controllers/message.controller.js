@@ -9,6 +9,7 @@ const MessageRepo_1 = __importDefault(require("../database/repository/MessageRep
 const asyncHandler_1 = __importDefault(require("../helpers/asyncHandler"));
 const RoomRepo_1 = __importDefault(require("../database/repository/RoomRepo"));
 const mongoose_1 = require("mongoose");
+const firebase_admin_1 = __importDefault(require("firebase-admin"));
 exports.MessageController = {
     send: (0, asyncHandler_1.default)(async (req, res) => {
         const { content, room, role, file, typeFile } = req.body;
@@ -54,6 +55,27 @@ exports.MessageController = {
             return new ApiResponse_1.BadRequestResponse("Tin nhắn không tìm thấy").send(res);
         messageCurrent.pin = pin || false;
         return new ApiResponse_1.SuccessResponse("success", messageCurrent).send(res);
+    }),
+    pushNotification: (0, asyncHandler_1.default)(async (req, res) => {
+        const { titleNotification, bodyNotification, tokenFireBase } = req.body;
+        const message = {
+            notification: {
+                title: titleNotification,
+                body: bodyNotification,
+            },
+            token: tokenFireBase,
+            data: {
+                path: "/",
+            },
+            android: {
+                notification: {
+                    icon: "https://pools.s3.ap-southeast-1.amazonaws.com/pools-wallet/android/ic_launcher.png",
+                    color: "#FFFFFF",
+                },
+            },
+        };
+        const response = await firebase_admin_1.default.messaging().send(message);
+        return new ApiResponse_1.SuccessResponse("success", response).send(res);
     }),
 };
 //# sourceMappingURL=message.controller.js.map

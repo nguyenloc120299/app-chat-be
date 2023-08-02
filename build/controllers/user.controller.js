@@ -41,7 +41,7 @@ exports.UserControllers = {
         user.profilePicUrl = profilePicUrl || user.profilePicUrl;
         user.linkFaceBook = linkFaceBook || "";
         user.linkTelegram = linkTelegram || "";
-        user.tokenFireBase = tokenFireBase || "";
+        user.tokenFireBase = tokenFireBase || user.tokenFireBase;
         await UserRepo_1.default.updateInfo(user);
         return new ApiResponse_1.SuccessResponse("Profile updated", user).send(res);
     }),

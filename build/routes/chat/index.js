@@ -13,5 +13,6 @@ router.use(authentication_1.default);
 router.post("/send", message_controller_1.MessageController.send);
 router.get("/all", message_controller_1.MessageController.getAll);
 router.post("/update", message_controller_1.MessageController.updateMessage);
+router.post('/push-notification', message_controller_1.MessageController.pushNotification);
 exports.default = router;
 //# sourceMappingURL=index.js.map

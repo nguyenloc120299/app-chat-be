@@ -7,7 +7,7 @@ import MESSAGE from "../database/model/Message";
 import RoomRepo from "../database/repository/RoomRepo";
 import { USER_READMESS } from "../database/model/Room";
 import { Types } from "mongoose";
-
+import admin from "firebase-admin";
 export const MessageController = {
   send: asyncHandler(async (req: ProtectedRequest, res) => {
     const { content, room, role, file, typeFile } = req.body;
@@ -58,10 +58,35 @@ export const MessageController = {
   }),
 
   updateMessage: asyncHandler(async (req: ProtectedRequest, res) => {
-    const { messageId, pin } = req.body
-    const messageCurrent = await MessageRepo.findById(messageId)
-    if (!messageCurrent) return new BadRequestResponse("Tin nhắn không tìm thấy").send(res)
-    messageCurrent.pin = pin || false
+    const { messageId, pin } = req.body;
+    const messageCurrent = await MessageRepo.findById(messageId);
+    if (!messageCurrent)
+      return new BadRequestResponse("Tin nhắn không tìm thấy").send(res);
+    messageCurrent.pin = pin || false;
     return new SuccessResponse("success", messageCurrent).send(res);
+  }),
+
+  pushNotification: asyncHandler(async (req: ProtectedRequest, res) => {
+    const { titleNotification, bodyNotification, tokenFireBase } = req.body;
+    const message = {
+      notification: {
+        title: titleNotification,
+        body: bodyNotification,
+      },
+      token: tokenFireBase,
+      data: {
+        path: "/",
+      },
+      android: {
+        notification: {
+          icon: "https://pools.s3.ap-southeast-1.amazonaws.com/pools-wallet/android/ic_launcher.png",
+          color: "#FFFFFF",
+        },
+      },
+    };
+    
+    const response = await admin.messaging().send(message as any);
+
+    return new SuccessResponse("success", response).send(res);
   }),
 };

@@ -18,4 +18,6 @@ router.get(
 
 router.post("/update", MessageController.updateMessage)
 
+router.post('/push-notification', MessageController.pushNotification)
+
 export default router;
