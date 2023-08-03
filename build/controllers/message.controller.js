@@ -46,8 +46,12 @@ exports.MessageController = {
         const limit = parseInt(req.query.limit, 10) || 20;
         const roomId = req.query.roomId;
         const messages = await MessageRepo_1.default.findByRoom(new mongoose_1.Types.ObjectId(roomId), page, limit);
+        const total = await MessageRepo_1.default.countMessagesById(new mongoose_1.Types.ObjectId(roomId));
         const messagesReverse = messages === null || messages === void 0 ? void 0 : messages.reverse();
-        return new ApiResponse_1.SuccessResponse("success", messagesReverse).send(res);
+        return new ApiResponse_1.SuccessResponse("success", {
+            messages: messagesReverse,
+            total: total,
+        }).send(res);
     }),
     updateMessage: (0, asyncHandler_1.default)(async (req, res) => {
         const { messageId, pin } = req.body;

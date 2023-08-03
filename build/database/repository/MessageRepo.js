@@ -4,10 +4,13 @@ const Message_1 = require("../model/Message");
 async function findById(id) {
     return Message_1.MessageModel.findOne({ _id: id, status: true }).lean().exec();
 }
+async function countMessagesById(id) {
+    return Message_1.MessageModel.countDocuments({ room: id, status: true });
+}
 async function findByRoom(room, page, limit) {
     const startIndex = (page - 1) * limit;
     return Message_1.MessageModel.find({ room: room, status: true })
-        .populate('sender')
+        .populate("sender")
         .sort({ createdAt: -1 })
         .skip(startIndex)
         .limit(limit)
@@ -45,5 +48,6 @@ exports.default = {
     update,
     findLastMessageByRoom,
     findByRoom,
+    countMessagesById,
 };
 //# sourceMappingURL=MessageRepo.js.map

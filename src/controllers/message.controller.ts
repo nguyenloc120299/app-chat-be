@@ -54,8 +54,14 @@ export const MessageController = {
       page,
       limit
     );
+    const total = await MessageRepo.countMessagesById(
+      new Types.ObjectId(roomId)
+    );
     const messagesReverse = messages?.reverse();
-    return new SuccessResponse("success", messagesReverse).send(res);
+    return new SuccessResponse("success", {
+      messages: messagesReverse,
+      total: total,
+    }).send(res);
   }),
 
   updateMessage: asyncHandler(async (req: ProtectedRequest, res) => {
@@ -68,10 +74,12 @@ export const MessageController = {
   }),
 
   pushNotification: asyncHandler(async (req: ProtectedRequest, res) => {
-    const { titleNotification, bodyNotification, userId, room, role } = req.body;
-    const user = await UserRepo.findById(userId)
-    if (!user) return new BadRequestResponse("User not found").send(res)
-    if (!user.tokenFireBase) return new BadRequestResponse("Token not found").send(res)
+    const { titleNotification, bodyNotification, userId, room, role } =
+      req.body;
+    const user = await UserRepo.findById(userId);
+    if (!user) return new BadRequestResponse("User not found").send(res);
+    if (!user.tokenFireBase)
+      return new BadRequestResponse("Token not found").send(res);
     const message = {
       notification: {
         title: titleNotification,
