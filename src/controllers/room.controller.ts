@@ -28,22 +28,31 @@ export const RoomController = {
   getAll: asyncHandler(async (req: ProtectedRequest, res) => {
     const page = parseInt(req.query.page as string, 10) || 1;
     const limit = parseInt(req.query.limit as string, 10) || 10;
-
-    const rooms = await RoomRepo.findAll(page, limit);
-    new SuccessResponse("Blog created successfully", rooms).send(res);
+    const search = req.query.search as string | "";
+    const rooms = await RoomRepo.findAll(page, limit, search);
+    const total = await RoomRepo.countRooms()
+    new SuccessResponse("Blog created successfully", {
+      rooms,
+      total
+    }).send(res);
   }),
 
   getRoomByUser: asyncHandler(async (req: ProtectedRequest, res) => {
     const userId = req.user._id;
     const page = parseInt(req.query.page as string, 10) || 1;
     const limit = parseInt(req.query.limit as string, 10) || 10;
+    const search = req.query.search as string | "";
     const rooms = await RoomRepo.findRoomsByUsers(
       new Types.ObjectId(userId),
       page,
-      limit
+      limit,
+      search
     );
-
-    new SuccessResponse("Blog created successfully", rooms).send(res);
+    const total = await RoomRepo.countRooms()
+    new SuccessResponse("Blog created successfully", {
+      rooms,
+      total
+    }).send(res);
   }),
 
   readMessage: asyncHandler(async (req: ProtectedRequest, res) => {

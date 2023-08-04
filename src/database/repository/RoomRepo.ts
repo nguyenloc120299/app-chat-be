@@ -7,9 +7,15 @@ async function findById(id: Types.ObjectId): Promise<ROOM | null> {
     .lean().exec();
 }
 
-async function findAll(page: number, pageSize: number): Promise<ROOM[] | []> {
+async function findAll(page: number, pageSize: number, search: string): Promise<ROOM[] | []> {
   const startIndex = (page - 1) * pageSize;
-  return RoomModel.find()
+  const searchRegex = new RegExp(search, 'i');
+  let query: any = {
+    $or: [
+      { nameRoom: searchRegex },
+    ]
+  };
+  return RoomModel.find(query)
     .populate("members")
     .sort({ createdAt: -1, updatedAt: -1 })
     .skip(startIndex).limit(pageSize).lean().exec();
@@ -18,15 +24,26 @@ async function findAll(page: number, pageSize: number): Promise<ROOM[] | []> {
 async function findRoomsByUsers(
   user: Types.ObjectId,
   page: number,
-  pageSize: number
+  pageSize: number,
+  search: string
 ): Promise<ROOM[]> {
   const startIndex = (page - 1) * pageSize;
-  return RoomModel.find({ members: { $in: user } })
+  const searchRegex = new RegExp(search, 'i');
+  let query: any = {
+    $or: [
+      { nameRoom: searchRegex },
+    ],
+    members: { $in: user }
+  };
+  return RoomModel.find(query)
     .populate('members')
     .skip(startIndex)
     .limit(pageSize)
     .lean()
     .exec();
+}
+async function countRooms(): Promise<number> {
+  return RoomModel.countDocuments()
 }
 
 async function create(sample: ROOM): Promise<ROOM> {
@@ -34,6 +51,7 @@ async function create(sample: ROOM): Promise<ROOM> {
   sample.createdAt = now;
   sample.updatedAt = now;
   const created = await RoomModel.create(sample);
+  await created.populate('members')
   return created.toObject();
 }
 
@@ -50,4 +68,5 @@ export default {
   update,
   findAll,
   findRoomsByUsers,
+  countRooms
 };
