@@ -3,9 +3,10 @@ import { Schema, model, Types } from "mongoose";
 export const DOCUMENT_NAME = "File";
 export const COLLECTION_NAME = "files";
 
-export enum Category {
-  ABC = "ABC",
-  XYZ = "XYZ",
+export enum TYPEFILE {
+  AVATAR = "AVATAR",
+  MESSAGE = "MESSAGE",
+  ORDER = "ORDER"
 }
 
 export default interface File {
@@ -14,6 +15,7 @@ export default interface File {
   url: string;
   createdAt?: Date;
   updatedAt?: Date;
+  type?: TYPEFILE
 }
 
 const schema = new Schema<File>(
@@ -25,6 +27,11 @@ const schema = new Schema<File>(
     url: {
       type: Schema.Types.String,
       required: true,
+    },
+    type: {
+      type: Schema.Types.String,
+      required: true,
+      enum: Object.values(TYPEFILE)
     },
     createdAt: {
       type: Schema.Types.Date,

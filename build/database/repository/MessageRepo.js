@@ -42,6 +42,9 @@ async function update(sample) {
         .lean()
         .exec();
 }
+async function deleteManyByRoom(room) {
+    await Message_1.MessageModel.deleteMany({ room });
+}
 exports.default = {
     findById,
     create,
@@ -49,5 +52,6 @@ exports.default = {
     findLastMessageByRoom,
     findByRoom,
     countMessagesById,
+    deleteManyByRoom
 };
 //# sourceMappingURL=MessageRepo.js.map

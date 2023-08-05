@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UploadController = void 0;
 const cloudinary_1 = __importDefault(require("cloudinary"));
 const fs_1 = __importDefault(require("fs"));
+const File_1 = require("../database/model/File");
 const FileRepo_1 = __importDefault(require("../database/repository/FileRepo"));
 cloudinary_1.default.v2.config({
     cloud_name: "dqqzhk0pd",
@@ -16,6 +17,7 @@ exports.UploadController = {
     upload: async (req, res) => {
         try {
             const { file } = req;
+            const type = req.query.type || File_1.TYPEFILE.ORDER;
             const { path } = file;
             const result = await new Promise((resolve, reject) => {
                 cloudinary_1.default.v2.uploader.upload(path, { upload_preset: "kyu77xbt", resource_type: "auto" }, (error, result) => {
@@ -29,6 +31,7 @@ exports.UploadController = {
             await FileRepo_1.default.create({
                 public_id: result.public_id,
                 url: result.secure_url,
+                type
             });
             res.json({ public_id: result.public_id, url: result.secure_url });
         }

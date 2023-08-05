@@ -6,27 +6,44 @@ async function findById(id) {
         .populate('members')
         .lean().exec();
 }
-async function findAll(page, pageSize) {
+async function findAll(page, pageSize, search) {
     const startIndex = (page - 1) * pageSize;
-    return Room_1.RoomModel.find()
+    const searchRegex = new RegExp(search, 'i');
+    let query = {
+        $or: [
+            { nameRoom: searchRegex },
+        ]
+    };
+    return Room_1.RoomModel.find(query)
         .populate("members")
         .sort({ createdAt: -1, updatedAt: -1 })
         .skip(startIndex).limit(pageSize).lean().exec();
 }
-async function findRoomsByUsers(user, page, pageSize) {
+async function findRoomsByUsers(user, page, pageSize, search) {
     const startIndex = (page - 1) * pageSize;
-    return Room_1.RoomModel.find({ members: { $in: user } })
+    const searchRegex = new RegExp(search, 'i');
+    let query = {
+        $or: [
+            { nameRoom: searchRegex },
+        ],
+        members: { $in: user }
+    };
+    return Room_1.RoomModel.find(query)
         .populate('members')
         .skip(startIndex)
         .limit(pageSize)
         .lean()
         .exec();
 }
+async function countRooms() {
+    return Room_1.RoomModel.countDocuments();
+}
 async function create(sample) {
     const now = new Date();
     sample.createdAt = now;
     sample.updatedAt = now;
     const created = await Room_1.RoomModel.create(sample);
+    await created.populate('members');
     return created.toObject();
 }
 async function update(sample) {
@@ -35,11 +52,16 @@ async function update(sample) {
         .lean()
         .exec();
 }
+async function deleteRoom(room) {
+    await Room_1.RoomModel.findByIdAndDelete({ _id: room });
+}
 exports.default = {
     findById,
     create,
     update,
     findAll,
     findRoomsByUsers,
+    countRooms,
+    deleteRoom
 };
 //# sourceMappingURL=RoomRepo.js.map

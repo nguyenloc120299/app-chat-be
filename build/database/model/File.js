@@ -1,14 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FileModel = exports.Category = exports.COLLECTION_NAME = exports.DOCUMENT_NAME = void 0;
+exports.FileModel = exports.TYPEFILE = exports.COLLECTION_NAME = exports.DOCUMENT_NAME = void 0;
 const mongoose_1 = require("mongoose");
 exports.DOCUMENT_NAME = "File";
 exports.COLLECTION_NAME = "files";
-var Category;
-(function (Category) {
-    Category["ABC"] = "ABC";
-    Category["XYZ"] = "XYZ";
-})(Category || (exports.Category = Category = {}));
+var TYPEFILE;
+(function (TYPEFILE) {
+    TYPEFILE["AVATAR"] = "AVATAR";
+    TYPEFILE["MESSAGE"] = "MESSAGE";
+    TYPEFILE["ORDER"] = "ORDER";
+})(TYPEFILE || (exports.TYPEFILE = TYPEFILE = {}));
 const schema = new mongoose_1.Schema({
     public_id: {
         type: mongoose_1.Schema.Types.String,
@@ -17,6 +18,11 @@ const schema = new mongoose_1.Schema({
     url: {
         type: mongoose_1.Schema.Types.String,
         required: true,
+    },
+    type: {
+        type: mongoose_1.Schema.Types.String,
+        required: true,
+        enum: Object.values(TYPEFILE)
     },
     createdAt: {
         type: mongoose_1.Schema.Types.Date,

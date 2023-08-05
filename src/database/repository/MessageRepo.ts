@@ -54,6 +54,10 @@ async function update(sample: MESSAGE): Promise<MESSAGE | null> {
     .exec();
 }
 
+async function deleteManyByRoom(room: Types.ObjectId): Promise<any> {
+  await MessageModel.deleteMany({ room })
+}
+
 export default {
   findById,
   create,
@@ -61,4 +65,5 @@ export default {
   findLastMessageByRoom,
   findByRoom,
   countMessagesById,
+  deleteManyByRoom
 };

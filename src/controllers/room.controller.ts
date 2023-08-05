@@ -96,5 +96,11 @@ export const RoomController = {
     roomCurrent.nameRoom = nameRoom || roomCurrent.nameRoom
     await RoomRepo.update(roomCurrent)
     return new SuccessResponse("Đã update date", roomCurrent).send(res)
+  }),
+  deleteRoom: asyncHandler(async (req: ProtectedRequest, res) => {
+    const { room } = req.body
+    await MessageRepo.deleteManyByRoom(room)
+    await RoomRepo.deleteRoom(room)
+    return new SuccessResponse("Đã xoá", true).send(res)
   })
 };

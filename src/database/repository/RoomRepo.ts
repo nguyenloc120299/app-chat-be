@@ -61,12 +61,15 @@ async function update(sample: ROOM): Promise<ROOM | null> {
     .lean()
     .exec();
 }
-
+async function deleteRoom(room: Types.ObjectId) {
+  await RoomModel.findByIdAndDelete({ _id: room })
+}
 export default {
   findById,
   create,
   update,
   findAll,
   findRoomsByUsers,
-  countRooms
+  countRooms,
+  deleteRoom
 };
