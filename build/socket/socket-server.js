@@ -48,6 +48,11 @@ const SocketServer = (socket, SocketServer) => {
     socket.on("joinUser", (user) => {
         console.log("1212121");
     });
+    socket.on('removeRoom', (data) => {
+        users.forEach((user) => {
+            SocketServer.to(user.socketId).emit('removeRoomClient', data);
+        });
+    });
     socket.on("leaveRoom", (data) => {
         console.log(data);
         socket.leave(data.roomId);
