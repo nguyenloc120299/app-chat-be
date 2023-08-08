@@ -3,8 +3,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Room_1 = require("../model/Room");
 async function findById(id) {
     return Room_1.RoomModel.findOne({ _id: id, status: true })
-        .populate('members')
-        .lean().exec();
+        .populate({
+        path: "members",
+        populate: {
+            path: "roles",
+        },
+    })
+        .lean()
+        .exec();
 }
 async function findAll(page, pageSize, search) {
     const startIndex = (page - 1) * pageSize;
@@ -15,9 +21,17 @@ async function findAll(page, pageSize, search) {
         ]
     };
     return Room_1.RoomModel.find(query)
-        .populate("members")
+        .populate({
+        path: "members",
+        populate: {
+            path: "roles",
+        },
+    })
         .sort({ createdAt: -1, updatedAt: -1 })
-        .skip(startIndex).limit(pageSize).lean().exec();
+        .skip(startIndex)
+        .limit(pageSize)
+        .lean()
+        .exec();
 }
 async function findRoomsByUsers(user, page, pageSize, search) {
     const startIndex = (page - 1) * pageSize;
@@ -29,7 +43,12 @@ async function findRoomsByUsers(user, page, pageSize, search) {
         members: { $in: user }
     };
     return Room_1.RoomModel.find(query)
-        .populate('members')
+        .populate({
+        path: "members",
+        populate: {
+            path: "roles",
+        },
+    })
         .skip(startIndex)
         .limit(pageSize)
         .lean()

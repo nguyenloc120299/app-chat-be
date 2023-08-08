@@ -53,6 +53,11 @@ const SocketServer = (socket, SocketServer) => {
             SocketServer.to(user.socketId).emit('removeRoomClient', data);
         });
     });
+    socket.on("addRoom", (data) => {
+        users.forEach((user) => {
+            SocketServer.to(user.socketId).emit("addRoomClient", data);
+        });
+    });
     socket.on("leaveRoom", (data) => {
         console.log(data);
         socket.leave(data.roomId);

@@ -77,12 +77,16 @@ const SocketServer = (socket: Socket, SocketServer: Socket) => {
   });
 
   socket.on('removeRoom', (data: { roomId: string }) => {
-
-
     users.forEach((user: any) => {
       SocketServer.to(user.socketId).emit('removeRoomClient', data);
     });
   })
+
+   socket.on("addRoom", (data:any) => {
+     users.forEach((user: any) => {
+       SocketServer.to(user.socketId).emit("addRoomClient", data);
+     });
+   });
 
   socket.on("leaveRoom", (data: Leave_Room) => {
     console.log(data);

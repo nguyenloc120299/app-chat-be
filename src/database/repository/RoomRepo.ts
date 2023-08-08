@@ -3,8 +3,14 @@ import ROOM, { RoomModel } from "../model/Room";
 
 async function findById(id: Types.ObjectId): Promise<ROOM | null> {
   return RoomModel.findOne({ _id: id, status: true })
-    .populate('members')
-    .lean().exec();
+    .populate({
+      path: "members",
+      populate: {
+        path: "roles",
+      },
+    })
+    .lean()
+    .exec();
 }
 
 async function findAll(page: number, pageSize: number, search: string): Promise<ROOM[] | []> {
@@ -16,9 +22,17 @@ async function findAll(page: number, pageSize: number, search: string): Promise<
     ]
   };
   return RoomModel.find(query)
-    .populate("members")
+    .populate({
+      path: "members",
+      populate: {
+        path: "roles",
+      },
+    })
     .sort({ createdAt: -1, updatedAt: -1 })
-    .skip(startIndex).limit(pageSize).lean().exec();
+    .skip(startIndex)
+    .limit(pageSize)
+    .lean()
+    .exec();
 }
 
 async function findRoomsByUsers(
@@ -36,7 +50,12 @@ async function findRoomsByUsers(
     members: { $in: user }
   };
   return RoomModel.find(query)
-    .populate('members')
+    .populate({
+      path: "members",
+      populate: {
+        path: "roles",
+      },
+    })
     .skip(startIndex)
     .limit(pageSize)
     .lean()
