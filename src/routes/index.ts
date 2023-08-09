@@ -8,9 +8,11 @@ import room from './room'
 import mess from './chat'
 import userRoom from './room/user-room'
 import upload from './upload'
+import roomManager from './room/create'
 import asyncHandler from "../helpers/asyncHandler";
 import { PublicRequest } from "app-request";
 import { SuccessResponse } from "../core/ApiResponse";
+
 const router = express.Router();
 
 /*---------------------------------------------------------*/
@@ -22,6 +24,7 @@ const router = express.Router();
 /*---------------------------------------------------------*/
 /*---------------------------------------------------------*/
 
+router.use("/room-manager", roomManager);
 router.use("/auth", signup);
 router.use("/profile", me);
 router.use("/room", room);
