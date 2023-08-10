@@ -23,13 +23,25 @@ async function findPrivateProfileById(
     .lean<User>()
     .exec();
 }
+async function findAllAdmin() {
+  let query: any = {};
+  const role = await RoleModel.findOne({ code: RoleCode.ADMIN }).exec();
+  query.roles = { $in: [role?._id] };
+  return UserModel.find(query).lean().exec();
+}
 
-async function findAll(page: number, pageSize: number, roleName: RoleCode | [], search: string, userId: Types.ObjectId): Promise<User[] | []> {
+async function findAll(
+  page: number,
+  pageSize: number,
+  roleName: RoleCode | [],
+  search: string,
+  userId: Types.ObjectId
+): Promise<User[] | []> {
   const startIndex = (page - 1) * pageSize;
   const searchQuery = search;
 
   // Create a regular expression to perform a case-insensitive search
-  const searchRegex = new RegExp(searchQuery, 'i');
+  const searchRegex = new RegExp(searchQuery, "i");
 
   let query: any = {};
 
@@ -40,28 +52,16 @@ async function findAll(page: number, pageSize: number, roleName: RoleCode | [], 
 
   if (searchQuery) {
     // Perform a case-insensitive search on name and phone fields
-    query.$or = [
-      { name: searchRegex },
-      { phone: searchRegex },
-    ];
+    query.$or = [{ name: searchRegex }, { phone: searchRegex }];
   }
   query._id = { $ne: userId };
   // Execute the query
   if (Object.keys(query).length > 0) {
-    return UserModel.find(query)
-      .skip(startIndex)
-      .limit(pageSize)
-      .lean()
-      .exec();
+    return UserModel.find(query).skip(startIndex).limit(pageSize).lean().exec();
   } else {
-    return UserModel.find({})
-      .skip(startIndex)
-      .limit(pageSize)
-      .lean()
-      .exec();
+    return UserModel.find({}).skip(startIndex).limit(pageSize).lean().exec();
   }
 }
-
 
 // contains critical information of the user
 async function findById(id: Types.ObjectId): Promise<User | null> {
@@ -155,7 +155,7 @@ async function updateInfo(user: User): Promise<any> {
 }
 
 async function findOneByToken(token: string): Promise<User | null> {
-  return await UserModel.findOne({ tokenFireBase: token })
+  return await UserModel.findOne({ tokenFireBase: token });
 }
 export default {
   exists,
@@ -168,5 +168,6 @@ export default {
   update,
   updateInfo,
   findAll,
-  findOneByToken
+  findOneByToken,
+  findAllAdmin,
 };

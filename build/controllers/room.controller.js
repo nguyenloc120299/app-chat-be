@@ -9,15 +9,21 @@ const RoomRepo_1 = __importDefault(require("../database/repository/RoomRepo"));
 const ApiResponse_1 = require("../core/ApiResponse");
 const MessageRepo_1 = __importDefault(require("../database/repository/MessageRepo"));
 const mongoose_1 = require("mongoose");
+const UserRepo_1 = __importDefault(require("../database/repository/UserRepo"));
 const rooms = [];
 exports.RoomController = {
     create: (0, asyncHandler_1.default)(async (req, res) => {
         const { nameRoom, avatarRoom, members } = req.body;
+        let admins = await UserRepo_1.default.findAllAdmin();
+        admins.map((user) => {
+            if (!(members === null || members === void 0 ? void 0 : members.includes(user === null || user === void 0 ? void 0 : user._id)))
+                return user === null || user === void 0 ? void 0 : user._id;
+        });
         const newRoom = await RoomRepo_1.default.create({
             nameRoom,
             avatarRoom,
             members: [req.user._id, ...members],
-            unReadMessage: [req.user._id, ...members].map((member) => {
+            unReadMessage: [req.user._id, ...members, ...admins].map((member) => {
                 return {
                     total: 0,
                     user: member,
@@ -35,7 +41,7 @@ exports.RoomController = {
         const total = await RoomRepo_1.default.countRooms();
         new ApiResponse_1.SuccessResponse("Blog created successfully", {
             rooms,
-            total
+            total,
         }).send(res);
     }),
     getRoomByUser: (0, asyncHandler_1.default)(async (req, res) => {
@@ -47,7 +53,7 @@ exports.RoomController = {
         const total = await RoomRepo_1.default.countRooms();
         new ApiResponse_1.SuccessResponse("Blog created successfully", {
             rooms,
-            total
+            total,
         }).send(res);
     }),
     readMessage: (0, asyncHandler_1.default)(async (req, res) => {
@@ -95,6 +101,6 @@ exports.RoomController = {
         await MessageRepo_1.default.deleteManyByRoom(room);
         await RoomRepo_1.default.deleteRoom(room);
         return new ApiResponse_1.SuccessResponse("Đã xoá", true).send(res);
-    })
+    }),
 };
 //# sourceMappingURL=room.controller.js.map

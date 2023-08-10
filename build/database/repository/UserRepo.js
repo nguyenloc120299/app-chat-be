@@ -22,11 +22,17 @@ async function findPrivateProfileById(id) {
         .lean()
         .exec();
 }
+async function findAllAdmin() {
+    let query = {};
+    const role = await Role_1.RoleModel.findOne({ code: Role_1.RoleCode.ADMIN }).exec();
+    query.roles = { $in: [role === null || role === void 0 ? void 0 : role._id] };
+    return User_1.UserModel.find(query).lean().exec();
+}
 async function findAll(page, pageSize, roleName, search, userId) {
     const startIndex = (page - 1) * pageSize;
     const searchQuery = search;
     // Create a regular expression to perform a case-insensitive search
-    const searchRegex = new RegExp(searchQuery, 'i');
+    const searchRegex = new RegExp(searchQuery, "i");
     let query = {};
     if (roleName) {
         const role = await Role_1.RoleModel.findOne({ code: roleName }).exec();
@@ -34,26 +40,15 @@ async function findAll(page, pageSize, roleName, search, userId) {
     }
     if (searchQuery) {
         // Perform a case-insensitive search on name and phone fields
-        query.$or = [
-            { name: searchRegex },
-            { phone: searchRegex },
-        ];
+        query.$or = [{ name: searchRegex }, { phone: searchRegex }];
     }
     query._id = { $ne: userId };
     // Execute the query
     if (Object.keys(query).length > 0) {
-        return User_1.UserModel.find(query)
-            .skip(startIndex)
-            .limit(pageSize)
-            .lean()
-            .exec();
+        return User_1.UserModel.find(query).skip(startIndex).limit(pageSize).lean().exec();
     }
     else {
-        return User_1.UserModel.find({})
-            .skip(startIndex)
-            .limit(pageSize)
-            .lean()
-            .exec();
+        return User_1.UserModel.find({}).skip(startIndex).limit(pageSize).lean().exec();
     }
 }
 // contains critical information of the user
@@ -131,6 +126,7 @@ exports.default = {
     update,
     updateInfo,
     findAll,
-    findOneByToken
+    findOneByToken,
+    findAllAdmin,
 };
 //# sourceMappingURL=UserRepo.js.map
