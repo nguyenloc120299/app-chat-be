@@ -62,7 +62,12 @@ async function create(sample) {
     sample.createdAt = now;
     sample.updatedAt = now;
     const created = await Room_1.RoomModel.create(sample);
-    await created.populate('members');
+    await created.populate({
+        path: "members",
+        populate: {
+            path: "roles",
+        },
+    });
     return created.toObject();
 }
 async function update(sample) {

@@ -70,7 +70,12 @@ async function create(sample: ROOM): Promise<ROOM> {
   sample.createdAt = now;
   sample.updatedAt = now;
   const created = await RoomModel.create(sample);
-  await created.populate('members')
+  await created.populate({
+    path: "members",
+    populate: {
+      path: "roles",
+    },
+  });
   return created.toObject();
 }
 
