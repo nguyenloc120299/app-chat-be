@@ -82,6 +82,12 @@ async function create(sample: ROOM): Promise<ROOM> {
 async function update(sample: ROOM): Promise<ROOM | null> {
   sample.updatedAt = new Date();
   return RoomModel.findByIdAndUpdate(sample._id, sample, { new: true })
+    .populate({
+      path: "members",
+      populate: {
+        path: "roles",
+      },
+    })
     .lean()
     .exec();
 }
