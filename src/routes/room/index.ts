@@ -16,7 +16,7 @@ router.use(authentication, role(RoleCode.ADMIN), authorization);
 router.get(
   "/get-all",
   RoomController.getAll
-);
+)
 
 // router.get('/users',
 //   UserControllers.getAllUser
