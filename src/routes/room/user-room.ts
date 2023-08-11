@@ -16,7 +16,7 @@ router.get(
   RoomController.getRoomByUser
 );
 
-
+router.get("/get-all-user", RoomController.getAll);
 
 router.post('/read-mess', RoomController.readMessage)
 

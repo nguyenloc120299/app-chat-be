@@ -9,11 +9,12 @@ const Role_1 = require("../../database/model/Role");
 const role_1 = __importDefault(require("../../helpers/role"));
 const authorization_1 = __importDefault(require("../../auth/authorization"));
 const room_controller_1 = require("../../controllers/room.controller");
+const user_controller_1 = require("../../controllers/user.controller");
 const router = express_1.default.Router();
 /*-------------------------------------------------------------------------*/
 router.use(authentication_1.default, (0, role_1.default)(Role_1.RoleCode.ADMIN, Role_1.RoleCode.EMPLOYEE), authorization_1.default);
 /*-------------------------------------------------------------------------*/
 router.post("/create", room_controller_1.RoomController.create);
-router.get("/get-all-user", room_controller_1.RoomController.getAll);
+router.get("/users", user_controller_1.UserControllers.getAllUser);
 exports.default = router;
 //# sourceMappingURL=create.js.map

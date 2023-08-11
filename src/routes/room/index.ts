@@ -18,9 +18,9 @@ router.get(
   RoomController.getAll
 );
 
-router.get('/users',
-  UserControllers.getAllUser
-)
+// router.get('/users',
+//   UserControllers.getAllUser
+// )
 
 router.post('/add-members', RoomController.addMembers)
 
