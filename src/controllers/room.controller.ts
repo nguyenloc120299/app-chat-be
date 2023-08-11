@@ -78,7 +78,7 @@ export const RoomController = {
   }),
   addMembers: asyncHandler(async (req: ProtectedRequest, res) => {
     const { roomId, members } = req.body;
-
+    let updatedRoom;
     const room = await RoomRepo.findById(roomId);
     if (room && room.members?.length && room.unReadMessage) {
       room.members = [...room.members, ...members];
@@ -89,9 +89,9 @@ export const RoomController = {
         };
       });
       room.unReadMessage = [...room.unReadMessage, ...newUnreadMess];
-      const updatedRoom = await RoomRepo.update(room);
+      updatedRoom = await RoomRepo.update(room);
     }
-    return new SuccessResponse("Đã update ", true).send(res);
+    return new SuccessResponse("Đã update ", updatedRoom).send(res);
   }),
   updateRoom: asyncHandler(async (req: ProtectedRequest, res) => {
     const { roomId, avatarRoom, nameRoom } = req.body;
