@@ -14,5 +14,6 @@ const router = express_1.default.Router();
 router.use(authentication_1.default, (0, role_1.default)(Role_1.RoleCode.ADMIN, Role_1.RoleCode.EMPLOYEE), authorization_1.default);
 /*-------------------------------------------------------------------------*/
 router.post("/create", room_controller_1.RoomController.create);
+router.get("/get-all-user", room_controller_1.RoomController.getAll);
 exports.default = router;
 //# sourceMappingURL=create.js.map

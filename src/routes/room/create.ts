@@ -12,6 +12,7 @@ router.use(authentication, role(RoleCode.ADMIN,RoleCode.EMPLOYEE), authorization
 /*-------------------------------------------------------------------------*/
 
 router.post("/create", RoomController.create);
+router.get("/get-all-user", RoomController.getAll);
 
 
 

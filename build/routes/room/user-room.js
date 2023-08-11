@@ -11,7 +11,6 @@ const router = express_1.default.Router();
 router.use(authentication_1.default);
 /*-------------------------------------------------------------------------*/
 router.get("/get-room", room_controller_1.RoomController.getRoomByUser);
-router.get("/get-all-user", room_controller_1.RoomController.getAll);
 router.post('/read-mess', room_controller_1.RoomController.readMessage);
 exports.default = router;
 //# sourceMappingURL=user-room.js.map
