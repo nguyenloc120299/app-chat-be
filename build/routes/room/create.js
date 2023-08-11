@@ -16,5 +16,6 @@ router.use(authentication_1.default, (0, role_1.default)(Role_1.RoleCode.ADMIN, 
 /*-------------------------------------------------------------------------*/
 router.post("/create", room_controller_1.RoomController.create);
 router.get("/users", user_controller_1.UserControllers.getAllUser);
+router.post("/add-members", room_controller_1.RoomController.addMembers);
 exports.default = router;
 //# sourceMappingURL=create.js.map

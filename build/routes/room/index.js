@@ -18,7 +18,7 @@ router.get("/get-all", room_controller_1.RoomController.getAll);
 // router.get('/users',
 //   UserControllers.getAllUser
 // )
-router.post('/add-members', room_controller_1.RoomController.addMembers);
+// router.post('/add-members', RoomController.addMembers)
 router.post('/update-room', room_controller_1.RoomController.updateRoom);
 router.post('/delete', room_controller_1.RoomController.deleteRoom);
 exports.default = router;

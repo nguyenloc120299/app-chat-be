@@ -9,11 +9,17 @@ import { UserControllers } from "../../controllers/user.controller";
 const router = express.Router();
 
 /*-------------------------------------------------------------------------*/
-router.use(authentication, role(RoleCode.ADMIN,RoleCode.EMPLOYEE), authorization);
+router.use(
+  authentication,
+  role(RoleCode.ADMIN, RoleCode.EMPLOYEE),
+  authorization
+);
 /*-------------------------------------------------------------------------*/
 
 router.post("/create", RoomController.create);
 
 router.get("/users", UserControllers.getAllUser);
+
+router.post("/add-members", RoomController.addMembers);
 
 export default router;

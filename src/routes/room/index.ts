@@ -22,7 +22,7 @@ router.get(
 //   UserControllers.getAllUser
 // )
 
-router.post('/add-members', RoomController.addMembers)
+// router.post('/add-members', RoomController.addMembers)
 
 router.post('/update-room', RoomController.updateRoom)
 
