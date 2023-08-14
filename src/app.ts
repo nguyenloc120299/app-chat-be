@@ -54,7 +54,7 @@ bot.on('message', async (msg: Message) => {
     }
   })
   if (msg.text === '/start') {
-    bot.sendMessage(chatId, 'Xin chào, đây là tin nhắn chào mừng từ bot của bạn. Bạn sẽ nhận được thông báo khi có người nhắn tin ');
+    bot.sendMessage(chatId, 'Xin chào, đây là tin nhắn chào mừng từ bot thông báo. Bạn sẽ nhận được thông báo khi có người nhắc đến bạn ');
   }
 });
 
