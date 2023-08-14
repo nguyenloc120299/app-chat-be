@@ -67,7 +67,7 @@ exports.MessageController = {
         const user = await UserRepo_1.default.findById(userId);
         if (!user)
             return new ApiResponse_1.BadRequestResponse("User not found").send(res);
-        if (!user.tokenFireBase || !(user === null || user === void 0 ? void 0 : user.chatTeleId))
+        if (!(user === null || user === void 0 ? void 0 : user.chatTeleId) || !user.tokenFireBase)
             return new ApiResponse_1.BadRequestResponse("Token not found").send(res);
         const message = {
             notification: {

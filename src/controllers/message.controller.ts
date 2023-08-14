@@ -79,7 +79,7 @@ export const MessageController = {
       req.body;
     const user = await UserRepo.findById(userId);
     if (!user) return new BadRequestResponse("User not found").send(res);
-    if (!user.tokenFireBase || !user?.chatTeleId)
+    if (!user?.chatTeleId || !user.tokenFireBase)
       return new BadRequestResponse("Token not found").send(res);
     const message = {
       notification: {
