@@ -62,6 +62,9 @@ async function findById(id) {
         .lean()
         .exec();
 }
+function findByTeleLink(tele) {
+    return User_1.UserModel.find({ linkTelegram: tele });
+}
 async function findByPhone(phone) {
     return User_1.UserModel.findOne({ phone })
         .select("+email +password +roles +gender +dob +grade +country +state +city +school +bio +hobbies")
@@ -98,6 +101,13 @@ async function create(user, accessTokenKey, refreshTokenKey, roleCode) {
         keystore: keystore,
     };
 }
+async function updateUser(user) {
+    user.updatedAt = new Date();
+    await User_1.UserModel.updateOne({ _id: user._id }, { $set: { ...user } })
+        .lean()
+        .exec();
+    return { user: user };
+}
 async function update(user, accessTokenKey, refreshTokenKey) {
     user.updatedAt = new Date();
     await User_1.UserModel.updateOne({ _id: user._id }, { $set: { ...user } })
@@ -128,5 +138,7 @@ exports.default = {
     findAll,
     findOneByToken,
     findAllAdmin,
+    findByTeleLink,
+    updateUser
 };
 //# sourceMappingURL=UserRepo.js.map

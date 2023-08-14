@@ -72,6 +72,7 @@ exports.RoomController = {
     addMembers: (0, asyncHandler_1.default)(async (req, res) => {
         var _a;
         const { roomId, members } = req.body;
+        let updatedRoom;
         const room = await RoomRepo_1.default.findById(roomId);
         if (room && ((_a = room.members) === null || _a === void 0 ? void 0 : _a.length) && room.unReadMessage) {
             room.members = [...room.members, ...members];
@@ -82,9 +83,9 @@ exports.RoomController = {
                 };
             });
             room.unReadMessage = [...room.unReadMessage, ...newUnreadMess];
-            const updatedRoom = await RoomRepo_1.default.update(room);
+            updatedRoom = await RoomRepo_1.default.update(room);
         }
-        return new ApiResponse_1.SuccessResponse("Đã update ", true).send(res);
+        return new ApiResponse_1.SuccessResponse("Đã update ", updatedRoom).send(res);
     }),
     updateRoom: (0, asyncHandler_1.default)(async (req, res) => {
         const { roomId, avatarRoom, nameRoom } = req.body;

@@ -74,7 +74,9 @@ async function findById(id: Types.ObjectId): Promise<User | null> {
     .lean()
     .exec();
 }
-
+function findByTeleLink(tele: string): Promise<User[] | []> {
+  return UserModel.find({ linkTelegram: tele })
+}
 async function findByPhone(phone: string): Promise<User | null> {
   return UserModel.findOne({ phone })
     .select(
@@ -129,6 +131,16 @@ async function create(
     keystore: keystore,
   };
 }
+async function updateUser(
+  user: User,
+): Promise<{ user: User; }> {
+  user.updatedAt = new Date();
+  await UserModel.updateOne({ _id: user._id }, { $set: { ...user } })
+    .lean()
+    .exec();
+
+  return { user: user };
+}
 
 async function update(
   user: User,
@@ -170,4 +182,6 @@ export default {
   findAll,
   findOneByToken,
   findAllAdmin,
+  findByTeleLink,
+  updateUser
 };

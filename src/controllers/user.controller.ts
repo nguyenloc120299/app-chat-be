@@ -20,6 +20,7 @@ export const UserControllers = {
         "roles",
         "linkFaceBook",
         "linkTelegram",
+        "chatTeleId"
       ])
     ).send(res);
   }),
@@ -48,8 +49,8 @@ export const UserControllers = {
     if (!user) throw new BadRequestError("User not registered");
     user.name = name;
     user.profilePicUrl = profilePicUrl || user.profilePicUrl || "";
-    user.linkFaceBook = linkFaceBook || "";
-    user.linkTelegram = linkTelegram || "";
+    user.linkFaceBook = linkFaceBook || user.linkFaceBook || "";
+    user.linkTelegram = linkTelegram || user.linkTelegram || "";
     if (tokenFireBase) {
       const userByToken = await UserRepo.findOneByToken(tokenFireBase)
       if (userByToken && userByToken?.phone != user.phone) {

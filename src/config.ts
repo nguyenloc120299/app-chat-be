@@ -19,4 +19,5 @@ export const tokenInfo = {
   audience: process.env.TOKEN_AUDIENCE || "xyz.com",
 };
 
+export const apiToken = '6387676803:AAEAZe4OlxBrMcuA1bwZLP-pgNd1LxroDQI';
 export const corsUrl = process.env.CORS_URL || "*";

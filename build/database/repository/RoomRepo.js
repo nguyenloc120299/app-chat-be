@@ -73,6 +73,12 @@ async function create(sample) {
 async function update(sample) {
     sample.updatedAt = new Date();
     return Room_1.RoomModel.findByIdAndUpdate(sample._id, sample, { new: true })
+        .populate({
+        path: "members",
+        populate: {
+            path: "roles",
+        },
+    })
         .lean()
         .exec();
 }

@@ -14,7 +14,8 @@ async function getUserData(user) {
         "linkFaceBook",
         "linkTelegram",
         "tokenFireBase",
-        "profilePicUrl"
+        "profilePicUrl",
+        "chatTeleId"
     ]);
     return data;
 }

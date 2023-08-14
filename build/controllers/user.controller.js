@@ -21,6 +21,7 @@ exports.UserControllers = {
             "roles",
             "linkFaceBook",
             "linkTelegram",
+            "chatTeleId"
         ])).send(res);
     }),
     getAllUser: (0, asyncHandler_1.default)(async (req, res) => {
@@ -38,8 +39,8 @@ exports.UserControllers = {
             throw new ApiError_1.BadRequestError("User not registered");
         user.name = name;
         user.profilePicUrl = profilePicUrl || user.profilePicUrl || "";
-        user.linkFaceBook = linkFaceBook || "";
-        user.linkTelegram = linkTelegram || "";
+        user.linkFaceBook = linkFaceBook || user.linkFaceBook || "";
+        user.linkTelegram = linkTelegram || user.linkTelegram || "";
         if (tokenFireBase) {
             const userByToken = await UserRepo_1.default.findOneByToken(tokenFireBase);
             if (userByToken && (userByToken === null || userByToken === void 0 ? void 0 : userByToken.phone) != user.phone) {

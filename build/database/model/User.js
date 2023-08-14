@@ -17,6 +17,9 @@ const schema = new mongoose_1.Schema({
     tokenFireBase: {
         type: mongoose_1.Schema.Types.String,
     },
+    chatTeleId: {
+        type: mongoose_1.Schema.Types.Number,
+    },
     phone: {
         type: mongoose_1.Schema.Types.String,
         unique: true,

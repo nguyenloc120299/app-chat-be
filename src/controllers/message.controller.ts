@@ -9,6 +9,7 @@ import { USER_READMESS } from "../database/model/Room";
 import { Types } from "mongoose";
 import admin from "firebase-admin";
 import UserRepo from "../database/repository/UserRepo";
+import { bot } from "../app";
 export const MessageController = {
   send: asyncHandler(async (req: ProtectedRequest, res) => {
     const { content, room, role, file, typeFile } = req.body;
@@ -78,7 +79,7 @@ export const MessageController = {
       req.body;
     const user = await UserRepo.findById(userId);
     if (!user) return new BadRequestResponse("User not found").send(res);
-    if (!user.tokenFireBase)
+    if (!user.tokenFireBase || !user?.chatTeleId)
       return new BadRequestResponse("Token not found").send(res);
     const message = {
       notification: {
@@ -96,6 +97,11 @@ export const MessageController = {
         },
       },
     };
+    const webpageLink = 'https://chat-fe-y7o1.onrender.com/';
+
+    // Tạo tin nhắn với liên kết bằng cú pháp Markdown
+    const messageBotTele = `${bodyNotification}\n\n[${webpageLink}](${`Xem tin nhắn mới`})`;
+    bot.sendMessage(user.chatTeleId, messageBotTele, { parse_mode: 'Markdown' });
 
     const response = await admin.messaging().send(message as any);
     const roomCurrent = await RoomRepo.findById(room);

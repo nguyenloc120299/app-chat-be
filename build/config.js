@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.corsUrl = exports.tokenInfo = exports.db = exports.timezone = exports.port = exports.environment = void 0;
+exports.corsUrl = exports.apiToken = exports.tokenInfo = exports.db = exports.timezone = exports.port = exports.environment = void 0;
 exports.environment = process.env.NODE_ENV;
 exports.port = process.env.PORT;
 exports.timezone = process.env.TZ;
@@ -19,5 +19,6 @@ exports.tokenInfo = {
     issuer: process.env.TOKEN_ISSUER || "api.dev.xyz.com",
     audience: process.env.TOKEN_AUDIENCE || "xyz.com",
 };
+exports.apiToken = '6387676803:AAEAZe4OlxBrMcuA1bwZLP-pgNd1LxroDQI';
 exports.corsUrl = process.env.CORS_URL || "*";
 //# sourceMappingURL=config.js.map

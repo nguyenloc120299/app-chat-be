@@ -11,6 +11,7 @@ const RoomRepo_1 = __importDefault(require("../database/repository/RoomRepo"));
 const mongoose_1 = require("mongoose");
 const firebase_admin_1 = __importDefault(require("firebase-admin"));
 const UserRepo_1 = __importDefault(require("../database/repository/UserRepo"));
+const app_1 = require("../app");
 exports.MessageController = {
     send: (0, asyncHandler_1.default)(async (req, res) => {
         const { content, room, role, file, typeFile } = req.body;
@@ -66,7 +67,7 @@ exports.MessageController = {
         const user = await UserRepo_1.default.findById(userId);
         if (!user)
             return new ApiResponse_1.BadRequestResponse("User not found").send(res);
-        if (!user.tokenFireBase)
+        if (!user.tokenFireBase || !(user === null || user === void 0 ? void 0 : user.chatTeleId))
             return new ApiResponse_1.BadRequestResponse("Token not found").send(res);
         const message = {
             notification: {
@@ -84,6 +85,10 @@ exports.MessageController = {
                 },
             },
         };
+        const webpageLink = 'https://chat-fe-y7o1.onrender.com/';
+        // Tạo tin nhắn với liên kết bằng cú pháp Markdown
+        const messageBotTele = `${bodyNotification}\n\n[${webpageLink}](${`Xem tin nhắn mới`})`;
+        app_1.bot.sendMessage(user.chatTeleId, messageBotTele, { parse_mode: 'Markdown' });
         const response = await firebase_admin_1.default.messaging().send(message);
         const roomCurrent = await RoomRepo_1.default.findById(room);
         if (!roomCurrent)

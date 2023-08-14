@@ -11,7 +11,8 @@ export default interface User {
   phone?: string;
   password?: string;
   roles: Role[];
-  tokenFireBase?:string;
+  tokenFireBase?: string;
+  chatTeleId?: number;
   verified?: boolean;
   status?: boolean;
   createdAt?: Date;
@@ -34,6 +35,9 @@ const schema = new Schema<User>(
     },
     tokenFireBase: {
       type: Schema.Types.String,
+    },
+    chatTeleId: {
+      type: Schema.Types.Number,
     },
     phone: {
       type: Schema.Types.String,
