@@ -42,7 +42,7 @@ io.on("connection", (socket: Socket) => {
 });
 bot.on('message', async (msg: Message) => {
   console.log("🚀 ~ file: app.ts:44 ~ bot.on ~ msg:", msg)
-  const userName = "YasukoMKT";
+  const userName = msg.chat.username;
   const chatId = msg.chat.id;
   const linkTele = `https://t.me/${userName}`
   const users = await UserRepo.findByTeleLink(linkTele)
