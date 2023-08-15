@@ -39,16 +39,21 @@ exports.bot.on('message', async (msg) => {
     const userName = msg.chat.username;
     const chatId = msg.chat.id;
     const linkTele = `https://t.me/${userName}`;
-    const users = await UserRepo_1.default.findByTeleLink(linkTele);
-    console.log("🚀 ~ file: app.ts:48 ~ bot.on ~ users:", users);
-    users.forEach(async (user) => {
-        if (user) {
-            user.chatTeleId = chatId;
-            await UserRepo_1.default.updateUser(user);
+    try {
+        const users = await UserRepo_1.default.findByTeleLink(linkTele);
+        console.log("🚀 ~ file: app.ts:48 ~ bot.on ~ users:", users);
+        for (const user of users) {
+            if (user) {
+                user.chatTeleId = chatId;
+                await UserRepo_1.default.updateUser(user);
+            }
         }
-    });
-    if (msg.text === '/start') {
-        exports.bot.sendMessage(chatId, 'Xin chào, đây là tin nhắn chào mừng từ bot thông báo. Bạn sẽ nhận được thông báo khi có người nhắc đến bạn ');
+        if (msg.text === "/start") {
+            await exports.bot.sendMessage(chatId, "Xin chào, đây là tin nhắn chào mừng từ bot thông báo. Bạn sẽ nhận được thông báo khi có người nhắc đến bạn.");
+        }
+    }
+    catch (error) {
+        console.error("Error:", error);
     }
 });
 exports.default = httpServer;
