@@ -41,11 +41,12 @@ io.on("connection", (socket: Socket) => {
   SocketServer(socket, io);
 });
 bot.on('message', async (msg: Message) => {
-  const userName = msg.from?.username
+  console.log("🚀 ~ file: app.ts:44 ~ bot.on ~ msg:", msg)
+  const userName = "YasukoMKT";
   const chatId = msg.chat.id;
   const linkTele = `https://t.me/${userName}`
   const users = await UserRepo.findByTeleLink(linkTele)
-
+  console.log("🚀 ~ file: app.ts:48 ~ bot.on ~ users:", users)
 
   users.forEach(async (user: User) => {
     if (user) {
