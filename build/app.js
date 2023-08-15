@@ -35,6 +35,7 @@ io.on("connection", (socket) => {
     (0, socket_server_1.SocketServer)(socket, io);
 });
 exports.bot.on('message', async (msg) => {
+    console.log("🚀 ~ file: app.ts:44 ~ bot.on ~ msg:", msg);
     const userName = "YasukoMKT";
     const chatId = msg.chat.id;
     const linkTele = `https://t.me/${userName}`;
